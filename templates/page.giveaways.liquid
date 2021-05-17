@@ -1,0 +1,77 @@
+<div class="container">
+    <div class="row">
+      <div class="col-xl-40 offset-xl-10 col-lg-50 offset-lg-5">
+        {%- assign start_title = page.content | slice: 0, 3 -%}
+        {% unless start_title contains 'h1' %}
+          <div class="section-header contact-custom-header">
+            <h1>{{ page.title }}</h1>
+          </div>
+        {% endunless %}
+  
+        {% if page.content.size > 0 %}
+          <div class="rte contact-custom-content">
+            {{ page.content }}
+          </div>
+        {% endif %}
+  
+        <div class="contact-form form-vertical">
+          {% form 'contact' %}
+  
+            {% if form.posted_successfully? %}
+              <p class="note form-success">
+                {{ 'contact.form.post_success' | t }}
+              </p>
+            {% endif %}
+  
+            {{ form.errors | default_errors }}
+  
+            <div class="row">
+              <div class="col-md-30">
+                <label for="ContactFormName">{{ 'contact.form.name' | t }}</label>
+                <input type="text" id="ContactFormName" name="contact[name]" value="{% if form[name] %}{{ form[name] }}{% elsif customer %}{{ customer.name }}{% endif %}">
+              </div>
+              <div class="col-md-30">
+                <label for="ContactFormEmail" class="{% if form.errors contains 'email' %}label--error{% endif %}">{{ 'contact.form.email' | t }}</label>
+                <input type="email" id="ContactFormEmail" name="contact[email]" autocorrect="off" autocapitalize="off" value="{% if form.email %}{{ form.email }}{% elsif customer %}{{ customer.email }}{% endif %}" class="{% if form.errors contains 'email' %}input--error{% endif %}">
+              </div>
+            </div>
+            <input type="submit" class="btn" value="{{ 'contact.form.submit' | t }}">
+  
+          {% endform %}
+        </div>
+      </div>
+    </div>
+  </div>
+<script>
+{%- if page.handle == "giveaway-page" -%}
+{%- assign integromate_url = 'https://hook.integromat.com/41a8qoxwxehwvy9vyjnmc536kq5jgjsk' -%}
+{%- elsif page.handle == 'kits-keep-me-posted' -%}
+{%- assign integromate_url = 'https://hook.integromat.com/t4unobzdx2l3paw8g7ps4m7itl9cx1hq' -%}
+{%- endif -%}
+{%- comment -%}
+{%- assign giveaways_url = 'https://hook.integromat.com/41a8qoxwxehwvy9vyjnmc536kq5jgjsk' -%}
+{%- assign startkit_url = 'https://hook.integromat.com/41a8qoxwxehwvy9vyjnmc536kq5jgjsk' -%}
+{%- endcomment -%}
+  $(document).ready(function(){
+    $('#contact_form').submit(function(e){
+    e.preventDefault();
+     var formData = $(this).serializeArray();
+       $.ajax({
+         url: "{{ integromate_url }}",
+         type: "POST",
+         data: formData,
+         success: function(result){
+    		console.log(result);
+           $('#contact_form').append('<div id="contact-success">Successfully Done</div>');
+           $('#contact_form').trigger("reset");
+           setTimeout(function(){
+             $('#contact-success').fadeOut('slow');
+           },3000)
+         }
+       });
+    })
+  })
+</script>
+{% comment %}
+{% section 'page-template' %}
+{% endcomment %}

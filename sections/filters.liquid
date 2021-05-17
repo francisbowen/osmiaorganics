@@ -1,0 +1,46 @@
+{% for block in section.blocks %}
+  {%- assign filter_tags_simple = block.settings.filter_tags | replace: ', ', ',' -%}
+  {%- assign filter_tags_simple = filter_tags_simple | replace: ' ,', ',' -%}
+  {%- assign fitler_tags = filter_tags_simple | split: ',' -%}
+  {%- assign curr_tags = '' -%}
+  {% for tag in current_tags %}
+    {% capture curr_tags %}{{ curr_tags }},{{ tag | handleize }}{% if forloop.last %},{% endif %}{% endcapture %}
+  {% endfor %}
+  <div class="filter_holder hide">
+    <label for="SortTags_{{ block.settings.title | handleize }}" class="label--hidden">{{ block.settings.title }}</label>
+    <select class="filters-toolbar__input filters-toolbar__input--filter custom-select" name="SortTags" id="SortTags_{{ block.settings.title | handleize }}" data-template="{% if template contains 'collection-of-collections' %}multiproduct{% else %}{{ collection.url }}{% endif %}" placeholder="{%- assign placeholder = block.settings.title -%}{% for filter_tag in fitler_tags %}{% capture filter_tag_handleized %},{{ filter_tag | handleize }},{% endcapture %}{% if curr_tags contains filter_tag_handleized %}{%- assign placeholder = filter_tag -%}{% endif %}{% endfor %}{{ placeholder }}" data-filtertype="{{ block.settings.title }}">
+      <option value="">{{ block.settings.title }}</option>
+      {% for filter_tag in fitler_tags %}
+        <option value="{{ filter_tag | handleize }}"{% capture filter_tag_handleized %},{{ filter_tag | handleize }},{% endcapture %}{% if curr_tags contains filter_tag_handleized %} selected="selected"{% endif %}>{{ filter_tag }}</option>
+      {% endfor %}
+    </select>
+  </div>
+{% endfor %}
+
+{% schema %}
+  {
+    "name": "Collection page filters",
+    "settings": [
+    ],
+    "blocks": [
+      {
+        "type": "collection_filters",
+        "name": "Collection Filters",
+        "limit": 3,
+        "settings": [
+          {
+            "type": "text",
+            "id": "title",
+            "label": "Filter Name"
+          },
+          {
+            "type": "textarea",
+            "id": "filter_tags",
+            "label": "Tags",
+            "info": "Separate with a comma"
+          }
+        ]
+      }
+    ]
+  }
+{% endschema %}

@@ -1,0 +1,350 @@
+<main class="main-content">
+<article class="container-fluid" >
+  <div id="shopify-section-article-template" class="shopify-section">
+    <div class="article-hero__image" style="background-image: url({{ article.image.src | img_url: '1500x' }});">
+  <div class="section-header text-center col-md-40 offset-md-10 article-item-inner">
+    {% assign article_content = article.content | split: '<h6>Split</h6>' %}
+    <h1 class="article__title">{{article.title}}</h1>
+    {% if article.tags contains 'show-author-image' %}
+    <div class="article-author-image">
+      {% if article.user.image %}
+      <img src="{{ article.user.image | img_url: '150x150' }}" />
+      {% else %}
+      <img src="//www.gravatar.com/avatar/{{ article.user.email | md5 }}?s=150" />
+      {% endif %}
+    </div>
+   {% endif %}
+    {% if section.settings.blog_show_author == true %}
+      <span class="article__author">by {{article.author}}</span>
+      <br />
+    {% endif %}
+    {% if section.settings.blog_show_date == true %}
+      <span class="article__date">
+        <time datetime="{{article.published_at}}">{{ article.published_at | time_tag: format: 'month_day_year' }}</time>
+      </span>
+    {% endif %}
+  </div>
+</div>
+<div class="row" style="background-color:#ededed;margin:0px;">
+  {% if article_content[0] != blank %}
+  <div class="col-md-40 offset-md-10 article-item-inner">
+    <div class="rte" itemprop="articleBody">
+     {{article_content[0]}}
+    </div>
+  </div>
+  {% endif %}
+  {% if article_content[1] != blank %}
+  <div class="col-md-40 offset-md-10 article-item-inner">
+    <div class="rte" itemprop="articleBody">
+    {{article_content[1]}}
+    </div>
+  </div>
+    {% endif %}
+  {% for block in section.blocks %}
+      {% for tag in article.tags %}
+          {% if tag == block.settings.tag %}
+              <div class="col-60 main-section-rte">
+                 <div class="blogslider custom-fjallraven" role="toolbar">
+                  <h3>Related Products</h3>
+                   {% for block in section.blocks %}
+                    {%- assign product1 = all_products[block.settings.product1] -%}
+                    {%- assign product2 = all_products[block.settings.product2] -%}
+                    {%- assign product3 = all_products[block.settings.product3] -%}
+                    {%- assign product4 = all_products[block.settings.product4] -%}
+                    {% if product1.title.size > 0 %}
+                      <div class="row grid--view-items justify-content-center">
+                        {% if block.settings.product1 != blank %}
+                          <div class="col-md-15 col-sm-30">
+                            <div class="grid-view-item">
+                              <a class="grid-view-item__link animsition-link" href="{{product1.url}}">
+                                <div class="grid-view-item__image" style="background-image:url({{ product1.featured_image.src | img_url: '500x' }});"></div>
+                                <div class="h4 grid-view-item__title">{{product1.title}}</div>
+                                <div class="grid-view-item__meta">
+
+                                </div>
+                              </a>
+                            </div>
+                          </div>
+                        {% endif %}
+                        {% if block.settings.product2 != blank %}
+                          <div class="col-md-15 col-sm-30">
+                            <div class="grid-view-item">
+                              <a class="grid-view-item__link animsition-link" href="{{product2.url}}">
+                                <div class="grid-view-item__image" style="background-image:url({{ product2.featured_image.src | img_url: '500x' }});"></div>
+                                <div class="h4 grid-view-item__title">{{product2.title}}</div>
+                                <div class="grid-view-item__meta">
+
+                                </div>
+                              </a>
+                            </div>
+                          </div>
+                        {% endif %}
+                        {% if block.settings.product3 != blank %}
+                          <div class="col-md-15 col-sm-30">
+                            <div class="grid-view-item">
+                              <a class="grid-view-item__link animsition-link" href="{{product3.url}}">
+                                <div class="grid-view-item__image" style="background-image:url({{ product3.featured_image.src | img_url: '500x' }});"></div>
+                                <div class="h4 grid-view-item__title">{{product3.title}}</div>
+                                <div class="grid-view-item__meta">
+
+                                </div>
+                              </a>
+                            </div>
+                          </div>
+                        {% endif %}
+                        {% if block.settings.product4 != blank %}
+                          <div class="col-md-15 col-sm-30">
+                            <div class="grid-view-item">
+                              <a class="grid-view-item__link animsition-link" href="{{product4.url}}">
+                                <div class="grid-view-item__image" style="background-image:url({{ product4.featured_image.src | img_url: '500x' }});"></div>
+                                <div class="h4 grid-view-item__title">{{product4.title}}</div>
+                                <div class="grid-view-item__meta">
+
+                                </div>
+                              </a>
+                            </div>
+                          </div>
+                        {% endif %}
+                      </div>
+                    {% else %}
+                      {% comment %}
+                        No product yet. Show onboarding one.
+                      {% endcomment %}
+                      <div class="grid-view-item">
+                        <a class="grid-view-item__link" href="#">
+                          <div class="grid-view-item__image">
+                            {% capture current %}{% cycle 1, 2, 3, 4, 5, 6 %}{% endcapture %}
+                            {{ 'product-' | append: current | placeholder_svg_tag: 'placeholder-svg' }}
+                          </div>
+                          <div class="h4 grid-view-item__title">{{ 'homepage.onboarding.product_title' | t }}</div>
+                          <div class="grid-view-item__meta">
+                            {{ 1999 | money }}
+                          </div>
+                        </a>
+                      </div>
+                    {% endif %}
+                    {% endfor %}
+              </div>
+        </div>
+          {% endif %}
+      {% endfor %} 
+ {% endfor %}
+    <div class="col-md-40 offset-md-10" style="background-color:white;padding:40px;">
+          {% if section.settings.show_share_buttons %}
+      {% include 'social-sharing', share_title: article.title, share_permalink: article.url, share_image: article.image %}
+    {% endif %}
+      
+			<section id="article_comments">
+				<h3>Leave a Comment</h3>
+				{% comment %}
+				<div class="fb-comments" data-href="{{ shop.url }}{{ article.url }}" data-numposts="5" data-width="100%"></div>
+				{% for comment in article.comments %}
+				<blockquote>
+					{{ comment.content }}<cite>{{ comment.author }} on {{ comment.created_at | date: "%B %d, %Y" }}</cite>
+				</blockquote>
+				{% endfor %}
+              {% endcomment %}
+              
+              <div id="disqus_thread"></div>
+<script>
+
+/**
+*  RECOMMENDED CONFIGURATION VARIABLES: EDIT AND UNCOMMENT THE SECTION BELOW TO INSERT DYNAMIC VALUES FROM YOUR PLATFORM OR CMS.
+*  LEARN WHY DEFINING THESE VARIABLES IS IMPORTANT: https://disqus.com/admin/universalcode/#configuration-variables*/
+/*
+var disqus_config = function () {
+this.page.url = PAGE_URL;  // Replace PAGE_URL with your page's canonical URL variable
+this.page.identifier = PAGE_IDENTIFIER; // Replace PAGE_IDENTIFIER with your page's unique identifier variable
+};
+*/
+(function() { // DON'T EDIT BELOW THIS LINE
+var d = document, s = d.createElement('script');
+s.src = 'https://osmia-organics.disqus.com/embed.js';
+s.setAttribute('data-timestamp', +new Date());
+(d.head || d.body).appendChild(s);
+})();
+</script>
+<noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+                            
+			</section><!-- .blog_comments -->
+     <div class="text-center return-link-wrapper">
+        <a href="{{ blog.url }}" class="btn btn--secondary btn--has-icon-before return-link">
+          {% include 'icon-arrow-left' %}
+          {{ 'blogs.article.back_to_blog' | t: title: blog.title }}
+        </a>
+      </div>           
+    </div> 
+
+</div>
+{% assign current_found = false %}
+{% assign done = false %}
+{% for a in blog.articles %}
+  {% if current_found and done == false %}
+    {% assign next_article = a %}
+    {% assign done = true %}
+  {% endif %}
+  {% unless done %}
+    {% if a.id == article.id %}
+      {% assign current_found = true %}
+    {% else %}
+      {% assign prev_article = a %}
+    {% endif %}
+  {% endunless %}
+{% endfor %}
+{% if prev_article or next_article %}
+  <div class="row">
+    <!-- START post article BAR -->
+    <div class="col-xl-40 offset-xl-10 col-lg-48 offset-lg-6">
+      <h3>Additional Articles</h3>
+      <div class="row">
+        {% if prev_article %}
+          <div class="prev-prod col-md-28 col-xs-60">
+            <a href="{{ prev_article.url }}">
+              <div class="sustainable-repeater mb-4">
+                <div class="half-top {{ prev_article.handle }}" style="{% if prev_article.image %}background-image:url('{{ prev_article | img_url: '600x' }}');{% else %}background-color:#d8d7d3;{%endif%}width:100%;background-size:cover;height:300px"></div>
+                <p>Previous Article</p>
+                <h4>{{ prev_article.title | truncatewords: 10 }}</h4>
+                <div class="btnholder mt-3">
+                  <span class="btn btn--secondary btn--has-icon-before return-link" href="{{ prev_article.url }}">{{ 'blogs.article.read_more' | t }}</span>
+                </div>
+              </div>
+            </a>
+          </div>
+        {% endif %}
+        {% if next_article %}
+          <div class="prev-prod col-md-28 offset-md-4 col-xs-60">
+            <a href="{{ next_article.url }}">
+              <div class="sustainable-repeater">
+                <div class="half-top {{ next_article.handle }}" style="{% if next_article.image %}background-image:url('{{ next_article | img_url: '600x' }}');{% else %}background-color:#d8d7d3;{%endif%}width:100%;background-size:cover;height:300px"></div>
+                <p>Next Article</p>
+                <h4>{{ next_article.title | truncatewords: 10 }}</h4>
+                <div class="btnholder">
+                  <span class="btn btn--secondary btn--has-icon-before return-link" href="{{ next_article.url }}">{{ 'blogs.article.read_more' | t }}</span>
+                </div>
+              </div>
+            </a>
+          </div>
+        {% endif %}
+      </div>
+    </div>
+    <!-- END post article BAR -->
+  </div>
+{% endif %}
+</div>
+</article>
+</main>
+<style type="text/css">
+  .article-hero__image {
+    height: 70vh;
+    position: relative;
+    background-position: center;
+}
+.page-container h1, .page-container .h1 {
+    text-transform: uppercase;
+    font-size: 3em;
+}
+.template-article .article__author, .template-article .article__date {
+    margin-bottom: 0;
+}
+.article-hero__image .section-header {
+    background-color: white;
+    position: absolute;
+    bottom: 0px;
+    right: 0px;
+    left: 0px;
+    text-align: center;
+    padding: 20px;
+    margin-bottom: 0px;
+}
+  @media screen and (max-width: 767px) {
+    .article-hero__image .section-header {
+      padding: 15px 0;
+    }
+    .article-item-inner {
+      padding: 20px 0 !important;
+    }
+  }
+</style>
+{%comment %}
+{% if article.content contains "<img" %}
+<script>
+    $("#shopify-section-article-template img").each(function(){
+      $(this).appendTo(".articleslides");
+    });
+   $('.articleslides').slick({
+      slidesToShow: 1,
+      slidesToScroll: 1,
+      autoplay: true,
+      dots: true,
+      infinite: true,
+      autoplaySpeed: 3000,
+      variableWidth: true
+    });
+</script>
+{% else %}
+<style type="text/css">
+  .article-slides{display: none}
+</style>
+{% endif %}
+{% endcomment %}
+{% schema %}
+  {
+    "name": "Posts",
+    "settings": [
+      {
+        "type": "checkbox",
+        "id": "blog_show_author",
+        "label": "Show author",
+        "default": true
+      },
+      {
+        "type": "checkbox",
+        "id": "blog_show_date",
+        "label": "Show date",
+        "default": true
+      },
+      {
+        "type": "checkbox",
+        "id": "show_share_buttons",
+        "label": "Show social sharing buttons",
+        "default": true
+      }
+    ],
+    "blocks": [
+      {
+        "type": "product",
+        "name": "Featured Products",
+        "settings": [
+          {
+            "type": "text",
+            "id": "tag",
+            "label": "Tag",
+            "default": "Skin"
+          },
+          {
+            "type": "product",
+            "id": "product1",
+            "label": "Product 1"
+          },
+          {
+            "type": "product",
+            "id": "product2",
+            "label": "Product 2"
+          },
+          {
+            "type": "product",
+            "id": "product3",
+            "label": "Product 3"
+          },
+          {
+            "type": "product",
+            "id": "product4",
+            "label": "Product 4"
+          }
+
+      ]
+    }
+    ]
+
+  }
+{% endschema %}

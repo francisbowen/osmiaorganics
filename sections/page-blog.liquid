@@ -1,0 +1,111 @@
+<main class="main-content" id="MainContent" role="main">
+<div id="shopify-section-blog-template" class="shopify-section">
+<div class="blog--list-view">
+    <div class="border-top">
+      <div class="container-fluid" style="padding:0px;">
+          <div class="row" style="margin:0px;">
+          {% for block in section.blocks %}
+            {% assign article  = articles[block.settings.article] %}
+                  <div class="article--listing listingsmall col-md-30" style="padding:0px 5px;">
+                    <div>
+                      <a href="{{article.url}}" class="article__list-image" style="background-image:url({{ article.image.src | img_url: '800x' }}"></a>
+                    <div class="col-md-30 offset-md-15 bloginfo">
+                        <h2 class="article__title h3"><a href="{{article.url}}">{{article.title}}</a></h2>
+                    <ul class="list--inline article__meta-buttons">
+                      <li>
+                        <a href="{{article.url}}" class="blogrm">
+                          Read More
+                        </a>
+                      </li>
+                    </ul>
+                    </div>
+                    </div>
+                  </div>
+          {% endfor %}
+      </div>
+      </div>
+    </div>
+    <ul class="list--inline pagination text-center">
+  <li>
+    
+      <div class="btn btn--secondary btn--narrow btn--disabled">
+        <svg aria-hidden="true" focusable="false" role="presentation" class="icon icon--wide icon-arrow-left" viewBox="0 0 20 8"><path d="M4.814 7.555C3.95 6.61 3.2 5.893 2.568 5.4 1.937 4.91 1.341 4.544.781 4.303v-.44a9.933 9.933 0 0 0 1.875-1.196c.606-.485 1.328-1.196 2.168-2.134h.752c-.612 1.309-1.253 2.315-1.924 3.018H19.23v.986H3.652c.495.632.84 1.1 1.036 1.406.195.306.485.843.869 1.612h-.743z" fill="#000" fill-rule="evenodd"></path></svg>
+        <span class="icon__fallback-text">Previous</span>
+      </div>
+    
+  </li>
+  <li class="pagination__text">
+    Page 1 of 20
+  </li>
+  <li>
+    
+      <a href="/blogs/blog" class="btn btn--secondary btn--narrow">
+        <svg aria-hidden="true" focusable="false" role="presentation" class="icon icon--wide icon-arrow-right" viewBox="0 0 20 8"><path d="M15.186.445c.865.944 1.614 1.662 2.246 2.154.631.491 1.227.857 1.787 1.098v.44a9.933 9.933 0 0 0-1.875 1.196c-.606.485-1.328 1.196-2.168 2.134h-.752c.612-1.309 1.253-2.315 1.924-3.018H.77v-.986h15.577c-.495-.632-.84-1.1-1.035-1.406-.196-.306-.486-.843-.87-1.612h.743z" fill="#000" fill-rule="evenodd"></path></svg>
+        <span class="icon__fallback-text">Next</span>
+      </a>
+    
+  </li>
+</ul>
+</div>
+</div>
+</main>
+<style type="text/css">
+#shopify-section-header-bg{display:none}
+  .article__list-image {
+    height: 70vh;
+}
+.listingsmall .article__list-image {
+    height: 45vh;
+}
+.bloginfo {
+    background-color: white;
+    position: absolute;
+    bottom: 0px;
+    right: 0px;
+    left: 0px;
+    text-align: center;
+    padding: 20px;
+}
+.article__title {
+    margin-bottom: 10px;
+}
+.blogrm {
+    font-size: 1.6em;
+}
+.list--inline {
+    padding: 0;
+    margin: 0;
+}
+.template-page #container-header .site-header a, .template-page #container-header .site-header .btn--link, .template-page #container-header .site-header .search-header__input{
+   color:rgb(120, 129, 136);
+}
+</style>
+
+<script>
+$(document).ready(function(){
+    $("#shopify-section-header > div").removeClass("homepageoverlay");
+    $("#shopify-section-header > div").addClass("no-overlay");
+});
+</script>
+{% schema %}
+  {
+    "name": "Core Brand",
+    "settings": [
+      
+    ],
+    "blocks": [
+      {
+        "type": "article",
+        "name": "Featured Article",
+        "limit": 8,
+        "settings": [
+        {
+            "type": "article",
+            "id": "article",
+            "label": "Article"
+          }
+         ]
+      }
+    ]
+  }
+{% endschema %}

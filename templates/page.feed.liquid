@@ -1,0 +1,37 @@
+{% comment %}
+
+	Credits:
+	- Michael Larkin: http://www.pixallent.com
+	- Caroline Schnapp: http://www.11heavens.com
+ 	- Jamie: http://www.charlestoncreative.com
+
+{% endcomment %}
+
+
+{% layout none %}<?xml version="1.0" encoding="UTF-8" ?>
+<rss xmlns:g="http://base.google.com/ns/1.0" version="2.0">
+    <channel>
+        <title>{{shop.name | escape }} Products</title>
+        <description></description>
+        <link>{{shop.url}}</link>
+        {% paginate collections.all-products.products by 1000 %}
+            {% for product in collections.all.products %}
+                <!-- Item #{{ forloop.index }} -->
+                <item>
+                  <title><![CDATA[{{ product.title | strip_html | strip_newlines | escape | replace: 'amp;', 'and' | replace: '&#38;', 'and' | replace: "Ã©", "e" | replace: "Ã ", "a" }}]]></title>
+                  <price>{{product.price | money_without_currency}}</price>
+                  <image_link>{{product.featured_image | product_img_url: 'large'}}</image_link>
+                  <g:id>{{product.id}}</g:id>
+                  <description><![CDATA[{{ product.description | strip_html | strip_newlines | replace: 'amp;', 'and' | replace: '&#38;', 'and' | replace: "..", ". " | replace: "  ", " " | replace: "â€˜", "&#39;" | replace: "â€™", "&#39;" | replace: "&#8216;", "&#39;" | replace: "&#8217;", "&#39;" | replace: "&#8217;", "&#39;" | replace: "Ã¢â‚¬â„¢", "&#39;" | replace: "Ã¢â‚¬Å“", "&#39;" | replace: "Ã¢â‚¬Ëœ", "&#39;"  | replace: "Ã‚Â´", "&#39;" | replace: "â€œ", "&#34;" | replace: "â€", "&#34;" | replace: "&#8211;", "-" | replace: "Ã¢â‚¬â€œ", "-" | replace: "Ã¢â‚¬â€", "-" | replace: "â€“", "&mdash;" | replace: "â€”", "&mdash;" | replace: "%", "&#37;" | replace: "Ã‚Â©", "&copy;" | replace: "Ã‚Â®", "&reg;" | replace: "Ã¢â€žÂ¢", "&trade;" | replace: "Ã‚Â£", "&pound;" | replace: "Ã¯Â¿Â­", "&#42;" | replace: "Ã¢â‚¬Â¢", "&#42;" | replace: "Ã¢â‚¬Â", "&#39;" | replace: "&#233;", "e" | replace: "Ã©", "e" | replace: "Ã ", "a" | replace: "Ã³", "o" | replace: "Ãª", "e" | replace: "ÃƒËœ", "O" | replace: "&#8482;", "" | replace: "&#174;", "" }}]]></description>
+                  <link>{{shop.url}}{{product.url}}</link>
+                  <sku>{{product.variants.first.sku}}</sku>
+  				  <category>{{product.collections.first.title}}</category>
+                  {% for collection in product.collections %}
+                  <collection_{{ forloop.index }}>{{collection.title}}</collection_{{ forloop.index }}>{% endfor %}
+                  {% for variant in product.variants %}{% if variant.available == true %}
+                  <variant_{{ forloop.index }}>{{variant.sku}}</variant_{{ forloop.index }}>{% endif %}{% endfor %}
+                </item>
+            {% endfor %}
+        {% endpaginate %}
+    </channel>
+</rss>

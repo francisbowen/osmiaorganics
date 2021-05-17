@@ -1,0 +1,31 @@
+<div class="questions-wrapper">
+    <div class="container">
+        <div class="quiz-intro">
+            <p>{{section.settings.content}}</p>
+            <a href="{{section.settings.url}}"><div class="icons" style="background-image: url('{{ section.settings.image | img_url: 'large' }}');"></div></a>      
+        </div>
+    </div>
+</div>
+
+{% schema %}
+{
+    "name": "Quiz intro",
+    "settings": [
+      {
+        "type": "text",
+        "id": "content",
+        "label": "Content"
+      },
+      {
+        "type": "image_picker",
+        "id": "image",
+        "label": "Image"
+      },
+      {
+        "type": "url",
+        "id": "url",
+        "label": "URL"
+      }
+    ]
+}
+{% endschema %}

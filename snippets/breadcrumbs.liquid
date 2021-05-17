@@ -1,0 +1,82 @@
+    {% assign collection_title = 'collection.title | link_to: collection.url' %}
+
+    {% unless template == 'index' or template == 'cart' or template == 'list-collections' %}
+      <div class="breadcrumbs">
+        <div class="container">
+          <div class="row">
+            <nav class="breadcrumb col pl-0" role="navigation" aria-label="breadcrumbs">
+              <a href="/" title="Home">Home</a>
+              {% if template contains 'page' %}
+                <span aria-hidden="true"> / </span>
+                <span>{{ page.title }}</span>
+              {% elsif template contains 'collection' and collection.handle %}
+                <span aria-hidden="true"> / </span>
+                {% if current_tags %}
+                  {% capture url %}/collections/{{ collection.handle }}{% endcapture %}
+                  {{ collection.title | link_to: url }}
+                  <span aria-hidden="true"> / </span>
+                  <span>{{ current_tags | join: " + " }}</span>
+                {% else %}
+                  <span>{{ collection.title }}</span>
+                {% endif %}
+              {% elsif template contains 'product' %}
+                {% if collection.url %}
+                <span aria-hidden="true"> / </span>
+                  <a href="/collections/all">Products</a>
+                  {% for link in linklists.for-the-face.links %}
+                          {%if link.title == collection.title %}
+                          <span aria-hidden="true"> / </span>
+                        <a href="/collections/for-the-face">For The Face</a>
+                        {%endif%}
+                  {% endfor %}
+                  {% for link in linklists.for-the-body.links %}
+                          {%if link.title == collection.title %}
+                          <span aria-hidden="true"> / </span>
+                        <a href="/collections/for-the-body">For The Body</a>
+                        {%endif%}
+                  {% endfor %}
+                  {% for link in linklists.for-a-gift.links %}
+                          {%if link.title == collection.title %}
+                          <span aria-hidden="true"> / </span>
+                        <a href="/collections/for-a-gift">For A Gift</a>
+                        {%endif%}
+                  {% endfor %}
+                  {% for link in linklists.by-scent.links %}
+                          {%if link.title == collection.title %}
+                          <span aria-hidden="true"> / </span>
+                        <a href="/collections/by-scent">By Scent</a>
+                        {%endif%}
+                  {% endfor %}
+                  <span aria-hidden="true"> / </span>
+                  {{ collection.title | link_to: collection.url }}
+                {% else %}
+                  <span aria-hidden="true"> / </span>
+                  <a href="/collections/all">Products</a>
+                {% endif %}
+                <span aria-hidden="true"> / </span>
+                <a href="{{product.url}}">{{product.title}}</a>
+              {% elsif template == 'blog' %}
+                <span aria-hidden="true"> / </span>
+                {% if current_tags %}
+                  {{ blog.title | link_to: blog.url }}
+                  <span aria-hidden="true"> / </span>
+                  <span>{{ current_tags | join: " + " }}</span>
+                {% else %}
+                <span>{{ blog.title }}</span>
+                {% endif %}
+              {% elsif template == 'article' %}
+                <span aria-hidden="true"> / </span>
+                {{ blog.title | link_to: blog.url }}
+                <span aria-hidden="true"> / </span>
+                <span>{{ article.title }}</span>
+              {% else %}
+               <span aria-hidden="true"> / </span>
+               <span>{{ page_title }}</span>
+              {% endif %}
+            </nav>
+          </div>
+        </div>
+      </div>
+    {% endunless %}
+
+

@@ -1,0 +1,285 @@
+<div class="container cart-template-container" data-section-id="{{ section.id }}" data-section-type="cart-template"> {%  include 'subscription-cart-footer' %} 
+  {%- assign cartprodc = settings.cartprod -%}
+  {%- assign prod = all_products[cartprodc] -%}
+  {%- assign cartprodsig = settings.cartsig -%}
+  {%- assign prodsig = all_products[cartprodsig] -%}
+  {%- assign gift_tag = false -%}
+  {%- assign signature = false -%}
+  {% for item in cart.items %}
+  {% if prod.id == item.product.id %}
+  {%- assign gift_tag = true -%}
+  {% endif %}
+  {% if prodsig.id == item.product.id %}
+    {%- assign signature = true -%}
+  {% endif %}
+  {% endfor %}
+  <form action="/cart" method="post" id="cartform">
+    <div class="row">
+      <div class="col-md-30 no-padding">
+        <h2>Your Cart</h2>
+      </div>
+      <div class="col-md-30 mr-0 cart-buttons no-padding">
+        <button class="btn" type="submit">Update Cart</button>
+        <button class="btn" type="submit" name="checkout">Check Out</button>
+        </div>
+    </div>
+    <div class="row">
+      <div class="col-60 no-padding cart-custom-text">
+        <div class="border-item-wrap">
+        <div class="row"> {% if cartprodsig != blank %}
+          <div class="col-lg-30 col-sm-60">
+            <div class="row">
+              <div class="col-sm-40 ">
+                <input id="signature" type="checkbox" value="{{ prod.variants[0].id }}" name="signature"{% if signature %} checked{% endif %} />
+                <label for="signature">{{section.settings.title}}(+${{ prodsig.price | money_without_currency }})</label>
+                <i>{{section.settings.customer_signature}}</i><br />
+                <br />
+              </div>
+            </div>
+            <div class="row">
+              {% comment %} <div class="col col-auto align-self-center cart-icon-item"> <img src="{{section.settings.shipping_icon | img_url: '100x'  }}"> </div> {% endcomment %}
+              <div class="col">{{section.settings.description}} </div>
+            </div>
+            <script>
+              (function() {
+                $('#signature').on('change',function(e){
+                  //e.preventDefault();
+                  if($(this).is(':checked')) {
+                    var qty = 1,
+                    updateurl = '/cart/add.js';
+                  } else {
+                    var qty = 0,
+                    updateurl = '/cart/change.js';
+                  }
+                  {% comment %} {% if gift_tag %}
+                    var qty = 0,
+                        updateurl = '/cart/change.js';
+                  {% else %}
+                    var qty = 1,
+                        updateurl = '/cart/add.js';
+                  {% endif %} {% endcomment %}
+                  var params = {
+                        type: 'POST',
+                        url: updateurl,
+                        data: {
+                          'quantity': qty,
+                          'id': {{ prodsig.variants[0].id }}
+                        },
+                        dataType: 'json',
+                        success: function(line_item) {
+                          location.reload();
+                        },
+                        error: function(jqXHR, status, err) {
+                          console.log(jqXHR);
+                          console.log(status);
+                          console.log(err);
+                        }
+                      };
+                  $.ajax(params);
+                });
+              })();
+            </script>
+          </div>
+          {% endif %}
+          {% if cartprodc != blank %}
+          <div class="col-lg-30 col-sm-60">
+            <div class="row">
+              <div class="col-sm-40 ">
+                <input id="giftwrap" type="checkbox" value="{{ prod.variants[0].id }}" name="giftwrap"{% if gift_tag %} checked{% endif %} />
+                <label for="giftwrap">{{section.settings.gift_title}} (+${{ prod.price | money_without_currency }})</label>
+                <div class="d-none d-md-block"> <br>
+                  <br>
+                </div>
+              </div>
+            </div>
+            <div class="row">
+              {% comment %} <div class="col col-auto align-self-center cart-icon-item"> <img src="{{section.settings.gift_icon | img_url: '100x'  }}"> </div> {% endcomment %}
+              <div class="col "> <a href="/pages/our-gift-box">
+              {{section.settings.description_gift}}
+              </div>
+            </div>
+          </div>
+          <script>
+              (function() {  
+                $('#giftwrap').on('change',function(e){
+                  //e.preventDefault();
+                  if($(this).is(':checked')) {
+                    var qty = 1,
+                        updateurl = '/cart/add.js';
+                  } else {
+                    var qty = 0,
+                        updateurl = '/cart/change.js';
+                  }
+                  {% comment %} {% if gift_tag %}
+                    var qty = 0,
+                        updateurl = '/cart/change.js';
+                  {% else %}
+                    var qty = 1,
+                        updateurl = '/cart/add.js';
+                  {% endif %} {% endcomment %}
+                  var params = {
+                        type: 'POST',
+                        url: updateurl,
+                        data: {
+                          'quantity': qty,
+                          'id': {{ prod.variants[0].id }}
+                        },
+                        dataType: 'json',
+                        success: function(line_item) {
+                          location.reload();
+                        },
+                        error: function(jqXHR, status, err) {
+                          console.log(jqXHR);
+                          console.log(status);
+                          console.log(err);
+                        }
+                      };
+                  $.ajax(params);
+                });
+              })();
+
+              $('.qty-input').on('focusin', function(){
+                    console.log("Saving value " + $(this).val());
+                    $(this).data('val', $(this).val());
+                });
+
+                $('.qty-input').on('change', function(){
+                    var prev = $(this).data('val');
+                    var current = $(this).val();
+                      setTimeout(function() {
+                          if (prev != current){
+                            $( "#cart_update" ).trigger( "click" );
+                          }
+                      }, 500);
+                });
+            </script>
+        </div>
+        {% endif %}
+      </div>
+  </div>
+    </div>
+    <div class="row"> {% if cart.item_count == 0 %}
+      <p>You have nothing in your cart.</p>
+      {% else %}
+      <table width="100%">
+        <thead>
+        <th class="cartimg"></th>
+          <th class="item">Item</th>
+          <th class="pricecart">Price</th>
+          <th class="quant">Quantity</th>
+          <th>Total</th>
+          <th></th>
+          </thead>
+        <tbody>
+        {% for item in cart.items %}
+        {% if prod.id == item.product.id %}
+        {%- assign gift_tag = true -%}
+        {% elsif prodsig.id == item.product.id %}
+        {%- assign signature = true -%}
+        {% else %}
+        <tr>
+          <td class="cartimg"><a href="{{ item.product.url }}"><img class="cart-item-image" src="{{ item.product.images.first | product_img_url: 'medium' }}" alt="{{ item.title | escape }}" /></a></td>
+          <td class="item"><a href="{{ item.product.url }}">{{ item.title }}</a> {% for p in item.properties %}
+            {% unless p.last == blank or p.first == "subscription_id" or p.first == "shipping_interval_frequency" or p.first == "shipping_interval_unit_type" %}
+            {% if p.last contains '/uploads/' %} <br />
+            {{ p.first }}: <a href="{{ p.last }}" target="_blank"><em>uploaded file</em></a> {% else %} <br />
+            {{ p.first }}: <em>{{ p.last }}</em> {% endif %}
+            {% endunless %}
+            {% endfor %} </td>
+          <td class="pricecart">{{ item.price | money }}</td>
+          <td class="quant"><input type="number" name="updates[]" id="updates_{{ item.id }}" class="qty-input" value="{{ item.quantity }}"></td>
+          <td>{{ item.line_price | money }}</td>
+          <td><a href="/cart/change?line={{ forloop.index }}&quantity=0" title="remove" class="hidden-sm-down" onclick="">Remove</a> <a href="/cart/change?line={{ forloop.index }}&quantity=0" title="remove" class="hidden-md-up" onclick=""><i class="cart-remove-button fa fa-times" aria-hidden="true"></i></a></td>
+        </tr>
+        {% endif %}
+        {% endfor %}
+        <tr>
+          <td class="cartimg" style="    padding: 15px 0;"><a href="/pages/how-we-give"><img class="cart-item-image" src="{{ 'Osmia_Treeicon.png' | asset_url }}" alt="Plant a tree icon" /></a></td>
+          <td colspan="5"><a href="/pages/how-we-give">Tree Planted</a><br />
+            Your order will plant one tree! Mother Earth thanks you!</td>
+         
+        </tr>
+        </tbody>
+      </table>
+      <div class="hidden-md-up text-right col-sm-60">
+        <h4>Subtotal: {{ cart.total_price | money }}</h4>
+      </div>
+    </div>
+</div>
+<div class="container no-padding">
+  
+  <div>
+  </div>
+  <div class="row no-gutters" style="width:100%;">
+  {% if section.settings.cart_notes_enable %}
+    <div class="col-md-30">
+      <p>
+        <label for="note">Order Comments:</label>
+        <br/>
+        <textarea name="note" id="note" rows="4" class="col-md-60">{{ cart.note }}</textarea>
+      </p>
+    </div>
+    {% endif %}
+    <div class="{% if section.settings.cart_notes_enable %} col-md-30{% else %} col-md-60{% endif %}" style="text-align:right;">
+      <h4 class="subtotal-cont">Subtotal: {{ cart.total_price | money }}</h4>
+      <button class="btn" id="cart_update" type="submit">Update Cart</button>
+        <button class="btn" type="submit" name="checkout">Check Out</button>
+    </div>
+  </div>
+  </form>
+  {% endif %}
+</div>
+
+{% stylesheet %}
+  #note {
+    border:1px solid #000000;
+  }
+{% endstylesheet %}
+{% schema %}
+  {
+    "name": "Cart page",
+    "settings": [
+      {
+        "type": "checkbox",
+        "id": "cart_notes_enable",
+        "label": "Enable cart notes",
+        "default": false
+      },
+      {
+        "type": "header",
+        "content": "International Shipping"
+      },
+      {
+        "type": "text",
+        "id": "customer_signature",
+        "label": "Customer Signature Text"
+      },
+       {
+        "type": "text",
+        "id": "title",
+        "label": "Heading"
+      },
+      {
+        "type": "richtext",
+        "id": "description",
+        "label": " Description"
+      },
+     
+      {
+        "type": "header",
+        "content": "Gift Box"
+      },
+       {
+        "type": "text",
+        "id": "gift_title",
+        "label": "Heading"
+      },
+      {
+        "type": "richtext",
+        "id": "description_gift",
+        "label": " Description"
+      }
+     
+    ]
+  }
+{% endschema %}

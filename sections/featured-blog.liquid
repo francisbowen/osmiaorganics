@@ -1,0 +1,138 @@
+<div class="container">
+  {% if section.settings.title != blank %}
+    <header class="section-header top-header-item text-center ">
+      <h2>{{ section.settings.title | escape }}</h2>
+    </header>
+  {% endif %}
+  
+  <div class="row grid--blog">
+    {% for block in section.blocks %}
+      {% if forloop.index == 4 %}
+        {% break %}
+      {% endif %}
+      {% assign article = articles[block.settings.article] %}
+      <div class="col-md-20 feature-blog-item-res">
+        <div class="blog-item equalize">
+          {% if article.image %}
+          <a href="{{ article.url }}" class="article__grid-image blog-img-inner" style="background:url('{{article | img_url: '345x'}}'); background-size:cover;    width: 100%;
+                                                                                        height: 200px;">
+          </a>
+          {% endif %}
+
+          <div class="article__grid-meta{% if article.image %} article__grid-meta--has-image img-mobile-item{% endif %}">
+            <h2 class="h3 article__title">
+              <a href="{{ article.url }}">{{ article.title }}</a>
+            </h2>
+
+            {% if section.settings.blog_show_author %}
+            <span class="article__author">{{ 'blogs.article.by_author' | t: author: article.author }}</span>
+            {% endif %}
+
+            {% if section.settings.blog_show_date %}
+            <span class="article__date">
+              {{ article.published_at | time_tag: format: 'month_day_year' }}
+            </span>
+            {% endif %}
+
+            <div class="rte article__grid-excerpt">
+              {% if article.excerpt.size > 0 %}
+              {{ article.excerpt }}
+              {% else %}
+              {{ article.content | strip_html | truncate: 150 }}
+              {% endif %}
+            </div>
+            {% comment %}
+            {% if article.tags.size > 0 %}
+            <div class="article__tags rte">
+              {% for tag in article.tags %}
+              <a href="{{ blog.url }}/tagged/{{ tag | handle }}" class="article__grid-tag">{{ tag }}</a>
+              {% endfor %}
+            </div>
+            {% endif %}
+            {% endcomment %}
+
+            <ul class="list--inline article__meta-buttons">
+              <li>
+                <a href="{{ article.url }}" class="btn btn--secondary btn--small blog-btn-small">
+                  {{ 'blogs.article.read_more' | t }}
+                </a>
+              </li>
+
+              {% if blog.comments_enabled? and article.comments_count > 0 %}
+              <li>
+                <a href="{{ article.url }}#comments" class="btn btn--small btn--link">
+                  {{ 'blogs.comments.comments_with_count' | t: count: article.comments_count }}
+                </a>
+              </li>
+              {% endif %}
+            </ul>
+          </div>
+        </div>
+      </div>
+      {%- assign indexer = forloop.index -%}
+    {% endfor %}
+    {% if indexer < 3 %}
+      <!-- LESS THAN THREE -->
+    {% endif %}
+  </div>
+
+  {% if section.settings.show_view_all %}
+    <hr class="hr--invisible" />
+    <div class="text-center">
+      <a href="{{ section.settings.view_all_link }}" class="btn">
+        {{ 'blogs.article.view_all' | t }}
+      </a>
+    </div>
+  {% endif %}
+</div>
+
+{% schema %}
+  {
+    "name": "Blog posts",
+    "class": "index-section",
+    "settings": [
+      {
+        "type": "text",
+        "id": "title",
+        "label": "Heading",
+        "default": "Blog posts"
+      },
+      {
+        "type": "checkbox",
+        "id": "blog_show_author",
+        "label": "Show author",
+        "default": false
+      },
+      {
+        "type": "checkbox",
+        "id": "blog_show_date",
+        "label": "Show date",
+        "default": true
+      },
+      {
+        "type": "checkbox",
+        "id": "show_view_all",
+        "label": "Show 'View all' button",
+        "default": false
+      },
+      {
+        "type": "url",
+        "id": "view_all_link",
+        "label": "View All Link"
+      }
+    ],
+	"blocks": [
+      {
+        "type": "featured_articles",
+        "name": "Featured Articles",
+        "settings": [
+          {
+            "type": "article",
+            "id": "article",
+            "label": "Article"
+          }
+        ]
+      }
+    ]
+  }
+{% endschema %}

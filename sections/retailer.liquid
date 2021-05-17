@@ -1,0 +1,67 @@
+{% assign all_retailer_tags = section.settings.tags | split: ", " %}
+    {% for retailer_tag in all_retailer_tags %}
+      <div id="retailer_group_arizona" class="retailer_group">
+        <h2>{{retailer_tag}}</h2>
+        <div class="clearfix"></div>
+        <ul class="retailer_logos">
+          {% for block in section.blocks %}
+          {% if retailer_tag == block.settings.tag %}
+          <li><a href="{{ block.settings.logo_url }}" target="_blank" ><img src="{{ block.settings.image | img_url: 'large' }}"  ></a></li>
+          {% endif%}
+          {% endfor %}
+        </ul>
+        </div>
+  {% endfor %}
+
+ 
+{% schema %}
+  {
+    "name": "Retailer",
+    "class": "index-section",
+    "settings": [
+      {
+        "type": "header",
+        "content": "Retailer Tags"
+
+      },
+      {
+        "type": "text",
+        "id": "tags",
+        "label": "Retailers",
+        "default": "Arizona, California, Colorado, Florida, Illinois, Massachusetts, Michigan, Montana, New York, North Carolina, Pennsylvania, South Carolina, Texas, Washington D.C"
+      }
+    ],
+    "blocks": [
+      {
+        "type": "text",
+        "name": "Retailer Logo",
+        "settings": [
+        {
+            "type": "text",
+            "id": "tag",
+            "label": "Retailer"
+        },
+        {
+        "type": "image_picker",
+        "id": "image",
+        "label": "Image"
+      },
+          {
+            "type": "url",
+            "id": "logo_url",
+            "label": "Logo Link"
+          }
+        ]
+      }
+    ]
+  }
+{% endschema %}
+
+
+
+
+
+
+
+
+

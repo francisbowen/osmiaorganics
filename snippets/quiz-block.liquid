@@ -1,0 +1,30 @@
+<div class="question-block" data-lvl="{{ block.settings.connect }}" data-info="{{ block.settings.title }}">
+  {% if block.settings.question != blank %}<h5>{{ block.settings.question }}</h5>{% endif %}
+  {% if block.settings.answers != blank %}
+    <div class="question-block-answers d-flex flex-wrap justify-content-center">
+      {%- assign answer_array = block.settings.answers | split: ',' -%}
+      {%- assign answer_image_array = block.settings.answers_images | split: ',' -%}
+      {% for answer_single in answer_array %}
+        {%- assign answer = answer_single | strip -%}
+        {%- assign prod_find = '\' | append: block.settings.connect | append: ' || ' | append: answer | append: '\' -%}
+        {%- assign prod_split = prod_listing | split: prod_find | last -%}
+        {%- assign prod_lvl = prod_split | split: '\' | first | times: 1 -%}
+      	{%- assign curr_image_loop = answer_image_array[forloop.index0] | strip -%}
+        <a class="question-block--answer question-block--answer-{{ block.id }}_{{ forloop.index }}{% if curr_image_loop != blank %} adjusted{% endif %}" href="{% if prod_listing contains prod_find %}{%- assign prod_handle = prod_listing_array[prod_lvl] | split: '\' | first -%}/products/{{ prod_handle }}{% endif %}" data-curr_select="{{ answer }}" data-prod_find="{% if starter %}passthrough{% elsif block.settings.connect != blank %}{{ block.settings.connect | append: ' || ' | append: answer }}{% else %}{{ answer }}{% endif %}">
+          {% if block.settings.show_label %}
+          <span>{{ answer_single }}</span>
+          {% endif %}
+        </a>
+      	{% if curr_image_loop != blank %}
+      	  {%- assign curr_image = curr_image_loop -%}
+      	  {% unless curr_image_loop contains 'https' %}
+      		{%- assign curr_image = curr_image_loop | file_img_url: '500x' -%}
+          {% endunless %}
+          <style>
+            .question-block--answer-{{ block.id }}_{{ forloop.index }}:before { background-image: url({{ curr_image }}); }
+          </style>
+        {% endif %}
+      {% endfor %}
+    </div>
+  {% endif %}
+</div>

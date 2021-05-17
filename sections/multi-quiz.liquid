@@ -1,0 +1,246 @@
+<div class="questions-wrapper">
+{%- assign questions = section.blocks | where: "type","quiz" -%}
+{%- assign answers = section.blocks | where: "type","answer" -%}
+{% for block in questions %}
+{%- assign answer_array = block.settings.answers | split: ',' -%}
+{%- assign answer_image_array = block.settings.answer_imgs | split: ',' -%}
+<div class="container">
+    <div class="question-box {% if forloop.index == 1%}selected{% endif %} {% if block.settings.make_parent %}parent-step{% endif %}" {% unless forloop.index == 1 %}style="display:none;"{% endunless %} data-step="{{ block.settings.question_no }}" data-connect="{% if block.settings.connected != blank %}{{ block.settings.connected }}{% else %}default{% endif %}" {% if block.settings.parent != blank %}data-parent="{{ block.settings.parent }}"{% endif %}>
+        <h4>Question<br>{{ block.settings.question_no }}</h4>
+        <strong class="question">{{ block.settings.title }}</strong>
+        <div class="answers-wrapper quest-block--{{ block.settings.question_no }} question-block-answers d-flex flex-wrap justify-content-center">
+            {% for answer_single in answer_array %}
+            {%- assign answer = answer_single | strip -%}
+            {%- assign curr_image_loop = answer_image_array[forloop.index0] | strip -%}
+            <a role="img" aria-label="{{ answer }}" class="question-block--answer question-block--answer-{{ block.id }}_{{ forloop.index }}{% if curr_image_loop != blank %} adjusted{% endif %}" href="{% if prod_listing contains prod_find %}{%- assign prod_handle = prod_listing_array[prod_lvl] | split: '\' | first -%}/products/{{ prod_handle }}{% endif %}" data-curr_select="{{ answer }}" data-prod_find="{% if starter %}passthrough{% elsif block.settings.connect != blank %}{{ block.settings.connect | append: ' || ' | append: answer }}{% else %}{{ answer }}{% endif %}">
+                <span {% unless block.settings.show_labels %}style="display:none;"{% endunless %}>{{ answer_single }}</span>
+            </a>
+                {% if curr_image_loop != blank %}
+                  {%- assign curr_image = curr_image_loop -%}
+                  {% unless curr_image_loop contains 'https' %}
+                    {%- assign curr_image = curr_image_loop | file_img_url: '500x' -%}
+                {% endunless %}
+                <style>
+                  .question-block--answer-{{ block.id }}_{{ forloop.index }}:before { background-image: url({{ curr_image }}); }
+                </style>
+              {% endif %}
+{% if answer_array.size > 4 and answer_array.size < 9 %}
+{% if forloop.index == 4 %}
+<div class="break"></div>
+{% endif %}
+{% elsif answer_array.size > 8 %}
+{% if forloop.index == 5 %}
+<div class="break"></div>
+{% endif %}
+{% endif %}
+            {% endfor %}
+        </div>
+    </div>
+</div>
+{% endfor %}
+<div class="container">
+    <div class="question-box answerbox" style="display:none;">
+      <strong class="text-uppercase" style="    letter-spacing: 5px;">You're almost there...</strong>        
+      <div class="answers-wrapper quest-block--finalresult question-block-answers d-flex flex-wrap justify-content-center">
+          <a class="qa-final-box  question-block--answer adjusted"></a>
+                <style>
+                  .qa-final-box:before { 
+                    background-image: url(https://cdn.shopify.com/s/files/1/0447/3157/files/lasticon.png?v=1610023704); 
+                  }
+                </style>
+        </div>
+      <p>
+      <strong>
+      We're putting together your personalized kit right now!
+      </strong>
+      </p>
+    </div>
+</div>
+<div class="quiz-slide-steps">
+    {% for i in (1..7) %}
+    <li {% if forloop.index == 1 %}class="enable active"{% endif %}></li>
+    {% endfor %}
+</div>
+</div>
+<div class="hiddens-answers-wrapper">
+{%- for block in answers -%}
+<div class="linked-answer" data-answer="{{ block.settings.answers }}" data-link="{{ block.settings.result_page }}"></div>
+{%- endfor -%}
+</div>
+<script>
+$(document).ready(function(){
+    localStorage.removeItem("parent");
+    $('.question-block--answer').click(function(e){
+        e.preventDefault();
+      	$("html, body").animate({ scrollTop: 0 }, 500);
+        $(this).addClass('selected-ans');       
+        var ans = $.trim($(this).find('span').text());
+        var question_box = $(this).closest('.question-box');
+        var current_question = parseInt(question_box.data('step'));
+        var next_level = current_question+1;
+        var parent = '';
+        let sAns = [];
+        if($(this).closest('.question-box').hasClass('parent-step')) {
+            localStorage.setItem('parent',ans);
+        }
+        if(localStorage.getItem('parent')) {
+            parent = localStorage.getItem('parent');
+        }
+        if(parent != '') {
+            ansClassName = $('.question-box[data-step="'+next_level+'"][data-connect="'+ans+'"][data-parent="'+parent+'"]');
+            className = $('.question-box[data-step="'+next_level+'"][data-connect="default"][data-parent="'+parent+'"]');
+        } else {
+            ansClassName = $('.question-box[data-step="'+next_level+'"][data-connect="'+ans+'"]');
+            className = $('.question-box[data-step="'+next_level+'"][data-connect="default"]');
+        }
+        question_box.hide();
+        if(ansClassName.length > 0) {
+            ansClassName.show().addClass('selected');
+        } else if(className.length > 0) {
+            className.show().addClass('selected');
+        } else {
+            $('.answerbox').show();
+            $('.quiz-slide-steps').remove();
+            localStorage.removeItem("parent");
+            var redirect_link = '';
+            var cart_attr = '';
+            var ans_array = {};
+            var connected_ans = '';
+            $('.question-box.selected').each(function(i,v){
+                var currendt_index = i+1;
+                ans_array['question'+currendt_index] = $.trim($(this).find('.question').text());
+                ans_array['answer'+currendt_index] = $.trim($(this).find('.selected-ans').text());
+                cart_attr = cart_attr+'\r\n'+$.trim($(this).find('.question').text());
+                cart_attr = cart_attr+'\r\n'+$.trim($(this).find('.selected-ans').text());
+                if(connected_ans == '') {
+                    connected_ans = $.trim($(this).find('.selected-ans').text());
+                } else {
+                    connected_ans = connected_ans+","+$.trim($(this).find('.selected-ans').text());
+                }
+            });
+            $('.linked-answer').each(function(){
+                var ans = $(this).data('answer');
+                if(connected_ans.includes(ans)) {
+                    redirect_link = $(this).data('link');
+                }
+            })
+            ans_array['link'] = redirect_link;
+            var integro_url = '//hook.integromat.com/5rcyqd9kwjj03khgs510na5t9xc36f5b';
+            $.ajax({
+                type: "POST",
+                url: integro_url,
+                data: ans_array,
+                success: function(data) {
+                if(data) {
+                    window.location.href = redirect_link;
+                }
+                },
+                fail: function(jqXHR, textStatus) {
+                    console.log(jqXHR + ' -- ' +textStatus);
+                    alert('Process failed, please reload the page and try again');
+                }
+            });
+        }
+        //$('.quiz-slide-steps').append('<li></li>');
+        $('.quiz-slide-steps li.enable').last().removeClass('active').next().addClass('enable active');
+        return false;
+    })
+    $('.quiz-slide-steps').on('click','li.enable',function(){
+        $("html, body").animate({ scrollTop: 0 }, 500);
+        var current_index = $(this).index() +1;
+        var bulletIndex = current_index - 1;
+        if(bulletIndex < 2) {
+            localStorage.removeItem("parent");
+        }
+        $(this).addClass('active');
+        $('.question-box:visible').hide();
+        $('.question-box.selected[data-step="'+current_index+'"]').show();
+        $('.question-box.selected').each(function(){
+            if($(this).data('step') > current_index) {
+                $(this).removeClass('selected');
+            }
+        })
+        $('.quiz-slide-steps li').each(function(){
+            if($(this).index() > bulletIndex) {
+                $(this).removeClass('enable');
+            }
+        })
+    })
+})
+</script>
+{% schema %}
+    {
+        "name":"Quiz Multistep",
+        "blocks":[
+            {
+                "type":"quiz",
+                "name":"Quiz",
+                "settings":[
+                    {
+                        "type":"text",
+                        "id":"title",
+                        "label":"Question"
+                    },
+                    {
+                        "type":"text",
+                        "id":"question_no",
+                        "label":"Question Number"
+                    },
+                    {
+                        "type":"textarea",
+                        "id":"answers",
+                        "label":"Answers"
+                    },
+                    {
+                        "type":"textarea",
+                        "id":"answer_imgs",
+                        "label":"Answer images"
+                    },
+                    {
+                        "type":"text",
+                        "id":"connected",
+                        "label":"Connected to answer"
+                    },
+                    {
+                        "type":"text",
+                        "id":"parent",
+                        "label":"Parent Answer"
+                    },
+                    {
+                        "type":"checkbox",
+                        "id":"make_parent",
+                        "label":"Make Parent",
+                        "info":"Answers will be splitted from here"
+                    },
+                    {
+                        "type":"checkbox",
+                        "id":"show_labels",
+                        "label":"Show labels"
+                    },
+                    {
+                        "type":"url",
+                        "id":"result_page",
+                        "label":"Result Page"
+                    }
+                ]
+            },
+            {
+                "type":"answer",
+                "name":"Answer",
+                "settings":[
+                    {
+                        "type":"text",
+                        "id":"answers",
+                        "label":"Connect to answer",
+                        "info":"Comma seperate each answer"
+                    },
+                    {
+                        "type":"url",
+                        "id":"result_page",
+                        "label":"Result page link"
+                    }
+                ]
+            }
+        ]
+    }
+{% endschema %}

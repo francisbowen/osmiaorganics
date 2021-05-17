@@ -1,0 +1,107 @@
+{%- assign showVariants = false -%}
+{%- if product.tags contains 'collection-options'-%}
+{%- assign showVariants = true -%}
+{%- endif -%}
+{% unless grid_image_width %}
+  {%- assign grid_image_width = '600x600' -%}
+{% endunless %}
+{%- assign summerTag = false -%}
+{% if product.tags contains settings.summer_note_tag %}
+  {%- assign summerTag = true -%}
+{% endif %}
+<div class="grid-view-item{% unless product.available %} product-price--sold-out grid-view-item--sold-out{% endunless %}">
+  <a class="grid-view-item__link animsition-link" href="{{ product.url | within: collection }}">
+    <div class="grid-view-item__image" style="background-image:url({{ product.featured_image.src | img_url: grid_image_width }});"></div>
+    <div class="h4 grid-view-item__title">{{ product.title }}</div>
+    <span class="shopify-product-reviews-badge" data-id="{{ product.id }}"></span>
+
+    {% if section.settings.show_vendor %}
+      <div class="grid-view-item__vendor">{{ product.vendor }}</div>
+    {% endif %}
+    <div class="grid-view-item__meta">
+      {% include 'product-price-simple' %}
+    </div>
+  </a>
+  {% comment %}
+  <div class="colleciton-product--optins mt-3">
+    {%- if showVariants -%}
+    {% unless product.options.size == 1 and product.variants[0].title == 'Default Title' %}
+    <label class="d-none" for="collectoin-product-{{ product.id}}">{{ product.options.first}}</label>
+    <select name="product_id" class="product-Variant-selector d-none mx-auto mb-2" id="collectoin-product-{{ product.id}}">
+      {% for variant in product.variants %}
+      {% if variant.available %}
+        <option value="{{ variant.id }}">{{ variant.title }}</option>
+      {% endif %}
+      {% endfor %}
+    </select>
+      {% else %}
+        <input type="hidden" name="product_id" value="{{ product.first_available_variant.id }}" class="product-Variant-selector">
+    {% endunless %}
+    {%- else -%}
+    <input type="hidden" name="product_id" value="{{ product.first_available_variant.id }}" class="product-Variant-selector">
+    {%- endif -%}
+    {% comment %} <input type="hidden" name="product_id" value="{{ product.first_available_variant.id }}" class="product-Variant-selector"> {% endcomment %}
+    <button type="button" class="product-buy-btn btn" {% if summerTag == true %}data-summer="true"{% endif %}>Add to Cart</button>
+  </div>
+  {% endcomment %}
+  <div class="colleciton-product--optins mt-2">
+    {%- if showVariants -%}
+    {% unless product.options.size == 1 and product.variants[0].title == 'Default Title' %}
+    <label class="d-none" for="collectoin-product-{{ product.id}}">{{ product.options.first}}</label>
+    <select name="product_id" class="product-Variant-selector d-block mx-auto mb-3" id="collectoin-product-{{ product.id}}">
+      {% for variant in product.variants %}
+      {% if variant.available %}
+        <option value="{{ variant.id }}">{{ variant.title }}</option>
+      {% endif %}
+      {% endfor %}
+    </select>
+      {% else %}
+        <input type="hidden" name="product_id" value="{{ product.first_available_variant.id }}" class="product-Variant-selector">
+    {% endunless %}
+    {%- else -%}
+    {%- if collection.handle == 'kits' -%}
+    {%- assign price_min = product.price_min -%}
+    {%- for variant in product.variants -%}
+      {%- if variant.price == price_min -%}
+        {%- assign trial_variant = variant -%}
+      {%- endif -%}
+    {%- endfor -%}
+    <input type="hidden" name="product_id" value="{{ trial_variant.id }}" class="product-Variant-selector">
+    {%- else -%}
+    <input type="hidden" name="product_id" value="{{ product.first_available_variant.id }}" class="product-Variant-selector">
+    {%- endif -%}
+    {%- endif -%}
+    {% comment %} <input type="hidden" name="product_id" value="{{ product.first_available_variant.id }}" class="product-Variant-selector"> {% endcomment %}
+    {%- if summerTag == true -%}
+    <a href="#shipping-note--{{ product.id }}" class="summer-popup btn">Add to Cart</a>
+    {%- else -%}
+      {% if product.tags contains 'coming soon' %}
+      <button type="button" class="product-buy-btn btn" disabled="disabled">Coming Soon</button>
+      {% else %}
+      <button type="button" class="product-buy-btn btn">Add to Cart</button>
+      {%- endif -%}
+    {%- endif -%}
+  </div>
+</div>
+{% if settings.summer_note != blank %}
+<div id="shipping-note--{{ product.id }}" class="white-popup mfp-hide text-center p-5">
+  {{ settings.summer_note }}
+  {%- if showVariants -%}
+    {% unless product.options.size == 1 and product.variants[0].title == 'Default Title' %}
+    <label class="d-none" for="collectoin-product-{{ product.id}}">{{ product.options.first}}</label>
+    <select name="product_id" class="product-Variant-selector d-block mx-auto mb-3" id="collectoin-product-{{ product.id}}">
+      {% for variant in product.variants %}
+      {% if variant.available %}
+        <option value="{{ variant.id }}">{{ variant.title }}</option>
+      {% endif %}
+      {% endfor %}
+    </select>
+      {% else %}
+        <input type="hidden" name="product_id" value="{{ product.first_available_variant.id }}" class="product-Variant-selector">
+    {% endunless %}
+    {%- else -%}
+    <input type="hidden" name="product_id" value="{{ product.first_available_variant.id }}" class="product-Variant-selector">
+    {%- endif -%}
+  <button type="button" class="product-buy-btn popup-btn btn">Continue to Cart</button>
+</div>
+{% endif %}

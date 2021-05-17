@@ -1,0 +1,534 @@
+{%- assign social_icons = false -%}
+
+{% if
+  settings.social_twitter_link != blank
+  or settings.social_facebook_link != blank
+  or settings.social_pinterest_link != blank
+  or settings.social_instagram_link != blank
+  or settings.social_tumblr_link != blank
+  or settings.social_snapchat_link != blank
+  or settings.social_youtube_link != blank
+  or settings.social_vimeo_link != blank
+%}
+  {%- assign social_icons = true -%}
+{% endif %}
+
+{% if section.settings.footer_newsletter_alone %}
+  <div class="site-newsletter ">
+    <div class="newsletter-wrap">
+    <div class="container">
+       
+      <div class="row align-items-center inner-item">
+			<div class="col-lg-60 col-md-60 ">
+  			<div class="site-footer__newsletter footer-newsletter-item">
+            {% include 'newsletter', newsletter_alone: true %}
+              {% for link in linklists.privacy-policy.links %}
+              <ul class="link-priv-link">
+               <li>{{ link.title | link_to: link.url }}</li>
+              </ul>
+{% endfor %}
+
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+  <style>
+    .site-newsletter {
+      {% if section.settings.background != blank %}
+        background-color: {{ section.settings.background }};
+      {% endif %}
+      {% if section.settings.newsletter_background != blank %}
+        background-color: {{ section.settings.newsletter_background }};
+      {% endif %}
+      {% if section.settings.newsletter_color != blank %}
+        color: {{ section.settings.newsletter_color }}
+      {% endif %}
+    }
+  </style>
+{% endif %}
+<div class="clearfix"></div>
+<footer class="site-footer" role="contentinfo" {% if section.settings.footer_newsletter_alone or page.handle contains 'quiz' %}{% else %}style="margin-top:60px;"{% endif %}>
+  <div class="container footer-top">
+    <div class="row">
+      <div class="col-md-60 text-center">
+    <div class="row justify-content-around">
+      {% comment %}
+      <div class="col-md-60">
+        {%- assign footer_logo = section.settings.logo -%}
+        {% if footer_logo == blank %}
+          <a href="/" class="logo--footer animsition-link">
+          <svg viewBox="0 0 206 100" class="footer_logo" width="100%" height="100%" > {% include 'footer-logo' %}</svg>
+        </a>
+        {% else %}
+        <a href="/" class="logo--footer animsition-link"><img src="{{ footer_logo | img_url: '150x' }}"
+          srcset="{{ footer_logo | img_url: '300x' }} 1x, {{ footer_logo | img_url: '150x', scale: 2 }} 2x"
+          alt="{{ settings.logo.alt | default: shop.name }}" /></a>
+        {% endif %} 
+        
+      
+        </div>
+        {% endcomment %}
+
+      {% if section.settings.footer_socials_enable or section.settings.footer_newsletter_enable and section.settings.footer_newsletter_alone == false %}
+        <div class="{% if section.settings.footer_newsletter_alone %}col-md-60{% else %}col-md-60{% endif %}">
+          <div class="row align-items-center">
+          <div class="col-md-44 col-lg-32 col-30-xxl">
+            {% if section.settings.footer_newsletter_enable and section.settings.footer_newsletter_alone == false %}
+              <div class="site-footer__newsletter">
+                {% include 'newsletter' %}
+              </div>
+            {% endif %}
+          </div>
+          <div class="col-md-16 col-lg-28 col-30-xxl">
+            {% if social_icons %}
+              {% if section.settings.socials_title %}<h4>{{ section.settings.socials_title }}</h4>{% endif %}
+              <ul class="list--inline site-footer__social-icons social-icons">
+                {% if settings.social_facebook_link != blank %}
+                  <li>
+                    <a class="social-icons__link" href="{{ settings.social_facebook_link }}" target="_blank" title="{{ 'layout.footer.social_platform' | t: name: shop.name, platform: 'Facebook' }}">
+                      {% include 'icon-facebook' %}
+                      <span class="icon__fallback-text">Facebook</span>
+                    </a>
+                  </li>
+                {% endif %}
+                {% if settings.social_twitter_link != blank %}
+                  <li>
+                    <a class="social-icons__link" href="{{ settings.social_twitter_link }}" target="_blank" title="{{ 'layout.footer.social_platform' | t: name: shop.name, platform: 'Twitter' }}">
+                      {% include 'icon-twitter' %}
+                      <span class="icon__fallback-text">Twitter</span>
+                    </a>
+                  </li>
+                {% endif %}
+                {% if settings.social_pinterest_link != blank %}
+                  <li>
+                    <a class="social-icons__link" href="{{ settings.social_pinterest_link }}" target="_blank" title="{{ 'layout.footer.social_platform' | t: name: shop.name, platform: 'Pinterest' }}">
+                      {% include 'icon-pinterest' %}
+                      <span class="icon__fallback-text">Pinterest</span>
+                    </a>
+                  </li>
+                {% endif %}
+                {% if settings.social_instagram_link != blank %}
+                  <li>
+                    <a class="social-icons__link" href="{{ settings.social_instagram_link }}" target="_blank" title="{{ 'layout.footer.social_platform' | t: name: shop.name, platform: 'Instagram' }}">
+                      {% include 'icon-instagram' %}
+                      <span class="icon__fallback-text">Instagram</span>
+                    </a>
+                  </li>
+                {% endif %}
+                {% if settings.social_tumblr_link != blank %}
+                  <li>
+                    <a class="social-icons__link" href="{{ settings.social_tumblr_link }}" target="_blank" title="{{ 'layout.footer.social_platform' | t: name: shop.name, platform: 'Tumblr' }}">
+                      {% include 'icon-tumblr' %}
+                      <span class="icon__fallback-text">Tumblr</span>
+                    </a>
+                  </li>
+                {% endif %}
+                {% if settings.social_snapchat_link != blank %}
+                  <li>
+                    <a class="social-icons__link" href="{{ settings.social_snapchat_link }}" target="_blank" title="{{ 'layout.footer.social_platform' | t: name: shop.name, platform: 'Snapchat' }}">
+                      {% include 'icon-snapchat' %}
+                      <span class="icon__fallback-text">Snapchat</span>
+                    </a>
+                  </li>
+                {% endif %}
+                {% if settings.social_youtube_link != blank %}
+                  <li>
+                    <a class="social-icons__link" href="{{ settings.social_youtube_link }}" target="_blank" title="{{ 'layout.footer.social_platform' | t: name: shop.name, platform: 'YouTube' }}">
+                      {% include 'icon-youtube' %}
+                      <span class="icon__fallback-text">YouTube</span>
+                    </a>
+                  </li>
+                {% endif %}
+                {% if settings.social_vimeo_link != blank %}
+                  <li>
+                    <a class="social-icons__link" href="{{ settings.social_vimeo_link }}" target="_blank" title="{{ 'layout.footer.social_platform' | t: name: shop.name, platform: 'Vimeo' }}">
+                      {% include 'icon-vimeo' %}
+                      <span class="icon__fallback-text">Vimeo</span>
+                    </a>
+                  </li>
+                {% endif %}
+                {% comment %}
+                {% if template contains 'blog' or template contains 'article' %}
+                  <li>
+                    <a class="social-icons__link" href="{{ shop.url }}{{ blog.url }}.atom">
+                      {% include 'icon-rss' %}
+                      <span class="icon__fallback-text">RSS</span>
+                    </a>
+                  </li>
+                {% endif %}
+                {% endcomment %}
+              </ul>
+            {% endif %}
+          </div>
+
+        </div>
+      {% endif %}
+
+      {% for block in section.blocks %}
+        {%- assign footer_linklist = block.settings.linklist -%}
+        {% if linklists[footer_linklist].links.size > 0 %}
+        <div class="row">
+          <div class="col-md-60 p-0">
+            {% if block.settings.title != blank %}<h4 class="mobile-toggler">{{ block.settings.title }}</h4>{% endif %}
+            <ul class="site-footer__linklist footer-link-center">
+              {% for link in linklists[footer_linklist].links %}
+                <li class="site-footer__linklist-item new-link-list-footer">
+                  <a class="animsition-link" href="{{ link.url }}">{{ link.title }}</a>
+                </li>
+              {% endfor %}
+            </ul>
+          </div>
+          </div>
+        {% endif %}
+      {% endfor %}          
+       </div>
+     </div>
+    </div>
+  </div>
+  </div>
+  {% comment %} <div class="footer-info">
+    <div class="col-md-30 offset-md-15 text-center">
+      <p class="help">{{section.settings.help_title}}</p>
+      <p>{{section.settings.timing}} <span>|</span> <a href="tel:+1{{section.settings.phone | remove: "." }}">{{section.settings.phone }}</a> <span>|</span> <a href="mailto:{{section.settings.email}}">{{section.settings.email}}</a></p>
+    </div>
+  </div> {% endcomment %}
+  <div class="site-footer__copyright--bottom footer-bottom">
+    <div class="container">
+      <div class="row">
+        {% comment %} <div class="col-md-30 mb-3">
+          <ul class="bottom-footer__linklist">
+              {% for link in linklists[section.settings.bottom_linklist].links %}
+                <li class="bottom-fotter__linklist-item">
+                  <a class="animsition-link" href="{{ link.url }}">{{ link.title }}</a>
+                </li>
+              {% endfor %}
+            </ul>
+
+        </div> {% endcomment %}
+        <div class="col-md-60 align-self-center">
+        <small class="site-footer__copyright-content">&copy; {{ 'now' | date: "%Y" }}, {{ shop.name | link_to: '/' }}</small>
+        <small class="site-footer__copyright-content">Built on Inferno Framework by <a href="http://wickcreative.com" target="_blank">Wick Creative</a></small>
+        </div>
+      </div>
+    </div>
+  </div> 
+</footer>
+
+{% if settings.newsletter_poup %}
+  <div id="newsletter-signup" class="white-popup mfp-hide mfp-with-anim"{% if settigns.newsletter_bg != blank %} style="background:url({{ settings.newsletter_bg | img_url: 'grande' }});"{% endif %}>
+        {% include 'newsletter' %}
+  </div>
+
+  <script>
+    $('.animsition').on('animsition.inEnd', function(){
+      if(Cookies.get('newslettersign') != 'true') {
+        Cookies.set('newslettersign', 'true'{% unless settings.newsletter_popup_length == '0' %}, { expires: {{ settings.newsletter_popup_length }} }{% endunless %});
+        $.magnificPopup.open({
+          removalDelay: 1000,
+          callbacks: {
+            beforeOpen: function() {
+              this.st.mainClass = 'mfp-move-horizontal'
+            }
+          },
+          items: {
+            src: '#newsletter-signup',
+            type: 'inline'
+          }
+        });
+        
+      }
+    });
+    $(document).ready(function(){
+      $("a.animsition-link").each(function(){
+        if (this.href == document.location) {
+          jQuery(this).addClass("active")
+        }
+      });
+      $('.simple-ajax-popup-align-top').magnificPopup({
+          type: 'ajax',
+          alignTop: true,
+          overflowY: 'scroll' // as we know that popup content is tall we set scroll overflow by default to avoid jump
+      });
+      $('.simple-ajax-popup').magnificPopup({
+          type: 'ajax'
+      });
+      $('.popup-with-zoom-anim').magnificPopup({
+          type: 'inline',
+
+          fixedContentPos: false,
+          fixedBgPos: true,
+
+          overflowY: 'auto',
+
+          closeBtnInside: true,
+          preloader: false,
+
+          midClick: true,
+          removalDelay: 300,
+          mainClass: 'my-mfp-zoom-in'
+      });
+  
+    });
+  </script>
+{% endif %}
+{%- comment -%}Sale Popup Start{%- endcomment -%}
+{% if settings.sale_poup %}
+  <div id="sale-welcome-popup" class="white-popup mfp-hide mfp-with-anim"{% if settings.sale_popup_bg != blank %} style="background-image:url({{ settings.sale_popup_bg | img_url: 'grande' }});"{% endif %}>
+        <div class="row">
+          <div class="col-md-60">
+            <div class="footer-newsletter-left" id="newsletter-signup">
+              {% if settings.sale_popup_title %}
+                <h4 class="h4">{{ settings.sale_popup_title }}</h4>
+              {% endif %}
+              {{ settings.sale_popup_content }}
+            </div>
+          </div>
+        </div>
+  </div>
+  <script>
+    $('.animsition').on('animsition.inEnd', function(){
+      if(Cookies.get('salepopup') != 'true') {
+        Cookies.set('salepopup', 'true'{% unless settings.sale_popup_length == '0' %}, { expires: {{ settings.sale_popup_length }} }{% endunless %});
+        $.magnificPopup.open({
+          removalDelay: 1000,
+          callbacks: {
+            beforeOpen: function() {
+              this.st.mainClass = 'mfp-move-horizontal'
+            }
+          },
+          items: {
+            src: '#sale-welcome-popup',
+            type: 'inline'
+          }
+        });
+      }
+    });
+    $(document).ready(function(){
+      $("a.animsition-link").each(function(){
+        if (this.href == document.location) {
+          jQuery(this).addClass("active")
+        }
+      });
+      $('.simple-ajax-popup-align-top').magnificPopup({
+          type: 'ajax',
+          alignTop: true,
+          overflowY: 'scroll' // as we know that popup content is tall we set scroll overflow by default to avoid jump
+      });
+      $('.simple-ajax-popup').magnificPopup({
+          type: 'ajax'
+      });
+      $('.popup-with-zoom-anim').magnificPopup({
+          type: 'inline',
+
+          fixedContentPos: false,
+          fixedBgPos: true,
+
+          overflowY: 'auto',
+
+          closeBtnInside: true,
+          preloader: false,
+
+          midClick: true,
+          removalDelay: 300,
+          mainClass: 'my-mfp-zoom-in'
+      });
+    });
+  </script>
+{% endif %}
+{%- comment -%}Sale Popup End{%- endcomment -%}
+<style>
+  {% if section.settings.background != blank %}
+    .site-footer {
+      background-color: {{ section.settings.background }};
+      {% if section.settings.link_color %}
+        color: {{ section.settings.link_color }};
+      {% endif %}
+    }
+
+    {% if section.settings.link_color %}
+      .site-footer a {
+        color: {{ section.settings.link_color }};
+      }
+    {% endif %}
+  {% endif %}
+
+
+  {% if section.settings.bottom_background != blank %}
+    .footer-bottom {
+      background-color: {{ section.settings.bottom_background }};
+      {% if section.settings.bottom_link_color %}
+        color: {{ section.settings.bottom_link_color }};
+      {% endif %}
+    }
+
+    {% if section.settings.bottom_link_color %}
+      .footer-bottom a {
+        color: {{ section.settings.bottom_link_color }};
+      }
+    {% endif %}
+  {% endif %}
+
+</style>
+
+{% schema %}
+  {
+    "name": "Footer",
+    "settings": [
+      {
+  
+        "type": "image_picker",
+        "id": "image",
+        "label": " Image"
+      },
+{
+        "type": "color",
+        "id": "background",
+        "label": "Background color"
+      },
+      {
+        "type": "color",
+        "id": "link_color",
+        "label": "Text color"
+      },
+      {
+        "type": "image_picker",
+        "id": "logo",
+        "label": "Logo",
+        "info": "If left blank, will default to header logo"
+      },
+      {
+        "type": "header",
+        "content": "Socials"
+      },
+      {
+        "type": "checkbox",
+        "id": "footer_socials_enable",
+        "label": "Show social icons",
+        "default": true,
+        "info": "Links are set in General Settings"
+      },
+      {
+        "type": "text",
+        "id": "socials_title",
+        "label": "Socials Title"
+      },
+      {
+
+        "type": "header",
+        "content": "Newsletter"
+      },
+      {
+        "type": "checkbox",
+        "id": "footer_newsletter_enable",
+        "label": "Show newsletter signup",
+        "default": false,
+        "info": "Form action set in General Settings"
+      },
+      {
+        "type": "checkbox",
+        "id": "footer_newsletter_alone",
+        "label": "Display newsletter before footer",
+        "info": "Use this to have the newsletter stand on it's own"
+      },
+      {
+        "type": "color",
+        "id": "newsletter_background",
+        "label": "Newsletter background color",
+        "info": "Only applicable if 'Display newsletter before footer' is checked"
+      },
+      {
+        "type": "color",
+        "id": "newsletter_color",
+        "label": "Newsletter text color",
+        "info": "Only applicable if 'Display newsletter before footer' is checked"
+      },
+      {
+        "type": "header",
+        "content": "Footer Info"
+      },
+      {
+        "type": "text",
+        "id": "help_title",
+        "label": "Heading", 
+        "default": "WE ARE HERE TO HELP!"
+      },
+      {
+        "type": "text",
+        "id": "timing",
+        "label": "Timings", 
+        "default": "Monday - Friday, 11 am - 5 pm, MDT"
+      },
+      {
+        "type": "text",
+        "id": "phone",
+        "label": "Phone", 
+        "default": "970.510.6610"
+      },
+      {
+        "type": "text",
+        "id": "email",
+        "label": "Email", 
+        "default": "info@osmiaorganics.com"
+      },
+      {
+        "type": "header",
+        "content": "Bottom Footer"
+      },
+      {
+        "type": "color",
+        "id": "bottom_background",
+        "label": "Bottom Fotter Background Color"
+      },
+      {
+        "type": "color",
+        "id": "bottom_link_color",
+        "label": "Bottom Footer Text Color"
+      },
+      {
+          "type": "link_list",
+          "id": "bottom_linklist",
+          "label": "Linklist",
+          "default": "footer"
+      },
+    {
+          "type": "link_list",
+          "id": "bottom_linklist_priv",
+          "label": "Linklist",
+          "default": "footer"
+      }
+
+    ],
+    "blocks": [
+      {
+        "type": "menu",
+        "name": "Menu",
+        "settings": [
+          {
+            "type": "text",
+            "id": "title",
+            "label": "Title"
+          },
+          {
+            "type": "link_list",
+            "id": "linklist",
+            "label": "Linklist",
+            "default": "footer"
+          }
+        ]
+      }
+    ],
+    "presets": [
+      {
+        "name": "Footer",
+        "category": "Default Layout",
+        "blocks": [
+          {
+            "type": "menu"
+          }
+        ]
+      }
+    ]
+  }
+{% endschema %}

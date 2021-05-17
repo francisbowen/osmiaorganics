@@ -1,0 +1,430 @@
+{%- assign cartprodc = settings.cartprod -%}
+{%- assign prod = all_products[cartprodc] -%}
+
+{%- assign cartprodsig = settings.cartsig -%}
+{%- assign prodsig = all_products[cartprodsig] -%}
+                    {%- assign gift_tag = false -%}
+                    {%- assign signature = false -%}
+{% if settings.header_sticky %}
+  <script>
+    function sticky_relocate() {
+      var window_top = $(window).scrollTop();
+      if($('#sticky-anchor').length) {
+        var div_top = $('#sticky-anchor').offset().top;
+      } else {
+        var div_top = 5;
+      }
+      if (window_top > div_top) {
+        $('#shopify-section-header > div').addClass('sticky-header logo-change');
+      } else {
+        $('#shopify-section-header > div').removeClass('sticky-header logo-change');
+      }
+    }
+
+    $(window).load(function() {
+      $('#shopify-section-header').height($('#shopify-section-header').outerHeight());
+      $(window).scroll(sticky_relocate);
+      sticky_relocate();
+    });
+  </script>
+
+{% endif %}
+{% comment %}
+{% if template != "page.policy" and template != "page.blog" or template != "index" or template != "blog" %}
+{% if settings.header_overlay %}
+  {% if  template contains 'page' and  template != "index" %}
+    <script>
+      function transparentToggle() {
+        var window_top = $(window).scrollTop();
+        var div_top = $('#MainContent > div:nth-child(2)').offset() - $('#container-header').outerHeight();
+        if (window_top > div_top) {
+          $('#container-header').removeClass('transparentTop');
+        } else {
+          $('#container-header').addClass('transparentTop');
+        }
+      }
+
+      $(document).ready(function(){
+        $('#PageContainer').css('margin-top','-'+$('#container-header').outerHeight()+'px')
+        $(window).scroll(function(){
+          transparentToggle();
+        });
+        transparentToggle();
+      });
+    </script>
+  {% endif %}
+{% endif %}
+{% endif %}
+
+{% endcomment %}
+  
+<div data-section-type="header-section"class="no-overlay">
+  <header class="container site-header{% if settings.align_logo == 'left' %} logo--left{% else %} logo--center{% endif %}" role="banner">
+    <div class="row align-items-center">
+      {% if settings.align_logo == 'center' %}
+                <div class="col col-md-29 hidden-sm-down {% if settings.align_menu == 'below' %}{% else %}{% endif %}">
+
+
+          {% if settings.align_menu == 'below' %}
+            <div class="site-header__search">
+              {% include 'search-form' %}
+            </div>
+
+          {% else %}
+            <nav class="hidden-sm-down text-{{ settings.align_menu_text }}" id="AccessibleNav" role="navigation">
+              {% include 'site-nav' %}
+            </nav>
+          {% endif %}
+
+        </div>
+      {% endif %}
+
+      {% if settings.align_logo == 'center' %}
+        {% if settings.align_menu == 'below' %}
+          {%- assign logo_classes = 'col col-md-16 logo-align--center col-30  col-md-30 logo-align--center' -%}
+        {% else %}
+          {%- assign logo_classes = 'col-md-16 logo-img-center logo-align--center' -%}
+        {% endif %}
+      {% else %}
+        {% if settings.align_menu == 'below' %}
+          {%- assign logo_classes = 'logo-align--left' -%}
+        {% else %}
+          {% if settings.logo_max_width != blank %}
+            {% assign logo_max = settings.logo_max_width | times: 1 %}
+            {% if logo_max > 200 %}
+              {%- assign logo_classes = 'col-md-16 logo-align--left' -%}
+            {% elsif logo_max > 250 %}
+              {%- assign logo_classes = 'col-md-18 logo-align--left' -%}
+            {% else %}
+              {%- assign logo_classes = 'col-md-15 logo-align--left' -%}
+            {% endif %}
+          {% else %}
+            {%- assign logo_classes = 'col-md-15 logo-align--left' -%}
+          {% endif %}
+        {% endif %}
+      {% endif %}
+
+      <div class="col {{ logo_classes }} col-30">
+        {% if template == 'index' %}
+          <h1 class="h2 site-header__logo" itemscope itemtype="http://schema.org/Organization">
+        {% else %}
+          <div class="h2 site-header__logo" itemscope itemtype="http://schema.org/Organization">
+        {% endif %}
+          {% if settings.logo %}
+            <a href="/" itemprop="url" class="site-header__logo-image animsition-link{% if settings.align_logo == 'center' %} site-header__logo-image--centered{% endif %}">
+              {% capture image_size %}{{ settings.logo_max_width }}x{% endcapture %}
+              <div>
+                <img src="{{ settings.logo | img_url: image_size }}"
+                     srcset="{{ settings.logo | img_url: image_size }} 1x, {{ settings.logo | img_url: image_size, scale: 2 }} 2x"
+                     alt="{{ settings.logo.alt | default: shop.name }}"
+                     itemprop="logo">
+              </div>
+
+              {% if settings.logo_scrolled and settings.header_sticky %}
+                <div>
+                  <img src="{{ settings.logo_scrolled | img_url: image_size }}"
+                       srcset="{{ settings.logo_scrolled | img_url: image_size }} 1x, {{ settings.logo_scrolled | img_url: image_size, scale: 2 }} 2x"
+                       alt="{{ settings.logo.logo_scrolled | default: shop.name }}"
+                       itemprop="logo">
+                </div>
+              {% endif %}
+
+              <span class="visually-hidden">{{ shop.name }}</span>
+
+            </a>
+          {% else %}
+          <a class="site-header__logo-link animsition-link" href="/" itemprop="url"><svg viewBox="0 0 206 100" class="header_logo" width="100%" height="100%"  fill="white"> {% include 'logo' %}</svg></a>
+            
+          {% endif %}
+        {% if template == 'index' %}
+          </h1>
+        {% else %}
+          </div>
+        {% endif %}
+      </div>
+
+      {% if settings.align_logo == 'left' and settings.align_menu == 'inline' %}
+        <nav class="col hidden-sm-down text-{{ settings.align_menu_text }}" id="AccessibleNav" role="navigation">
+          {% include 'site-nav' %}
+        </nav>
+      {% endif %}
+
+      <div class="{% if settings.align_logo == 'center' %}{% if settings.align_menu == 'below' %}col-md-15{% else %}col-md-15{% endif %}{% else %}{% if settings.align_menu != 'below' %}col-md-15{% endif %}{% endif %} col-30 text-right site-header__icons{% if shop.customer_accounts_enabled %} site-header__icons--plus{% endif %}">
+        <div class="site-header__icons-wrapper">
+          {% if settings.align_logo == 'left' or settings.align_menu == 'inline'  %}
+            <div class="site-header__search hidden-sm-down">
+              {% include 'search-form' %}
+            </div>
+          {% endif %}
+
+          <button type="button" class="btn--link site-header__search-toggle js-drawer-open-top hidden-md-up">
+            {% include 'icon-search' %}
+            <span class="icon__fallback-text">{{ 'layout.navigation.search' | t }}</span>
+          </button>
+
+          {% if shop.customer_accounts_enabled %}
+            {% if customer %}
+              <a href="/account" class="site-header__account animsition-link">
+                {% include 'icon-login' %}
+                <span class="icon__fallback-text">{{ 'layout.customer.account' | t }}</span>
+              </a>
+            {% else %}
+              <a href="/account/login" class="site-header__account animsition-link">
+                {% include 'icon-login' %}
+                <span class="icon__fallback-text">{{ 'layout.customer.log_in' | t }}</span>
+              </a>
+            {% endif %}
+          {% endif %}
+
+          <a href="/cart" class="site-header__cart">
+            {% include 'icon-cart' %}
+            <span class="visually-hidden">{{ 'layout.cart.title' | t }}</span>
+            <span class="icon__fallback-text">{{ 'layout.cart.title' | t }}</span>
+            {% if cart.item_count > 0 %}
+              <div id="CartCount" class="site-header__cart-count">
+                <span>{{ cart.item_count }}</span>
+                <span class="icon__fallback-text hidden-md-up">{{ 'layout.cart.items_count' | t: count: cart.item_count }}</span>
+              </div>
+            {% endif %}
+          </a>
+
+          {% unless linklists[settings.main_linklist] == blank %}
+            <button type="button" class="btn--link site-header__menu js-mobile-nav-toggle mobile-nav--open">
+              {% include 'icon-hamburger' %}
+              {% include 'icon-close' %}
+              <span class="icon__fallback-text">{{ 'layout.navigation.toggle' | t }}</span>
+            </button>
+          {% endunless %}
+        </div>
+
+        {% if settings.cartdropdown_disable %}
+          <div class="shopping-cart">
+          <i class="fa fa-window-close" aria-hidden="true"></i>
+
+            {% if cart.item_count > 0 %}
+              <ul class="shopping-cart-items">
+                {% for item in cart.items %}
+                                      {% if prod.id == item.product.id %}
+                          {%- assign gift_tag = true -%}
+                        {% elsif prodsig.id == item.product.id %}
+                          {%- assign signature = true -%}
+                		{% endif %}
+                  <li id="cart-item-{{ item.id }}" class="item clearfix">
+                    <a href="{{ item.url }}" class="d-flex animsition-link">
+                      <div class="item-image" style="background-image:url({{item.image | product_img_url: '300x' }})" ></div>
+<!--                       <img src="{{ item.image | product_img_url: '72x' }}" alt="{{ item.title }}" /> -->
+                      <div class="product-details">
+                        <span class="item-name">{{ item.product.title }}</span>
+                        <span class="item-option">
+                          {% if item.product.variants.size != 0 %}
+                            {% unless item.variant.title contains 'Default' %}
+                              <small>{{ item.variant.title }}</small>
+                            {% endunless %}
+                          {% endif %}
+                        </span>
+                        <span class="item-price">{{ item.line_price | money }}</span>
+                        <span class="item-quantity">x {{ item.quantity }}</span>
+                      </div>
+                    </a>
+                  </li>
+                {% endfor %}
+              </ul>
+            
+            
+      <div class="text-left">
+      <input id="signature" type="checkbox" value="{{ prod.variants[0].id }}" name="signature"{% if signature %} checked{% endif %} /><label for="signature">Add Signature Required Shipping Option (+${{ prodsig.price | money_without_currency }})</label>
+
+      	<script>
+          (function() {  
+            $('#signature').on('change',function(e){
+              e.preventDefault();
+              {% if signature %}
+                var qty = 0,
+                    updateurl = '/cart/change.js';
+              {% else %}
+                var qty = 1,
+                    updateurl = '/cart/add.js';
+              {% endif %}
+              var params = {
+                    type: 'POST',
+                    url: updateurl,
+                    data: {
+                      'quantity': qty,
+                      'id': {{ prodsig.variants[0].id }}
+                    },
+                    dataType: 'json',
+                    success: function(line_item) {
+                      location.reload();
+                    },
+                    error: function(jqXHR, status, err) {
+                      console.log(jqXHR);
+                      console.log(status);
+                      console.log(err);
+                    }
+                  };
+              $.ajax(params);
+            });
+          })();
+        </script>
+      
+        <style>
+          #signature {
+            display: none;
+          }
+          #signature + label {
+            position: relative;
+            padding-left: 25px;
+            margin-bottom: 15px;
+            margin-top: 25px;
+            display: block;
+          }
+          #signature + label:before {
+            content: '';
+            display: block;
+            position: absolute;
+            left: 0;
+            top: 0;
+            width: 20px;
+            height: 20px;
+            background: #ebebeb;
+            border: 2px solid #ebebeb;
+          }
+          #signature:checked + label:after {
+            content: '';
+            display: block;
+            width: 9px;
+            height: 18px;
+            border: solid #575493;
+            border-width: 0 3px 3px 0;
+            transform: rotate(45deg);
+            position: absolute;
+            left: 8px;
+            top: -2px;
+          }
+        </style>
+  </div>
+              <div class="text-left">
+        <input id="giftwrap" type="checkbox" value="{{ prod.variants[0].id }}" name="giftwrap"{% if gift_tag %} checked{% endif %} /><label for="giftwrap">Add a Gift Box (+${{ prod.price | money_without_currency }})</label>
+      	<script>
+          (function() {  
+            $('#giftwrap').on('change',function(e){
+              e.preventDefault();
+              {% if gift_tag %}
+                var qty = 0,
+                    updateurl = '/cart/change.js';
+              {% else %}
+                var qty = 1,
+                    updateurl = '/cart/add.js';
+              {% endif %}
+              var params = {
+                    type: 'POST',
+                    url: updateurl,
+                    data: {
+                      'quantity': qty,
+                      'id': {{ prod.variants[0].id }}
+                    },
+                    dataType: 'json',
+                    success: function(line_item) {
+                      location.reload();
+                    },
+                    error: function(jqXHR, status, err) {
+                      console.log(jqXHR);
+                      console.log(status);
+                      console.log(err);
+                    }
+                  };
+              $.ajax(params);
+            });
+          })();
+        </script>
+      
+        <style>
+          #giftwrap {
+            display: none;
+          }
+          #giftwrap + label {
+            position: relative;
+            padding-left: 25px;
+            margin-bottom: 15px;
+            margin-top: 25px;
+            display: block;
+          }
+          #giftwrap + label:before {
+            content: '';
+            display: block;
+            position: absolute;
+            left: 0;
+            top: 0;
+            width: 20px;
+            height: 20px;
+            background: #ebebeb;
+            border: 2px solid #ebebeb;
+          }
+          #giftwrap:checked + label:after {
+            content: '';
+            display: block;
+            width: 9px;
+            height: 18px;
+            border: solid #575493;
+            border-width: 0 3px 3px 0;
+            transform: rotate(45deg);
+            position: absolute;
+            left: 8px;
+            top: -2px;
+          }
+        </style>
+        </div>
+              <div class="shopping-cart-header">
+                {{ 'cart.general.subtotal' | t }}: {{ cart.total_price | money }}
+              </div>
+              <a href="/cart" class="btn btn--secondary half">Cart</a>
+              <a href="/checkout" class="btn btn--secondary half">Checkout</a>
+            {% else %}
+              <p class="text-center">{{ 'cart.general.empty' | t }}</p>
+              <a href="/" class="btn btn--secondary full">{{ 'general.404.link' | t }}{% include 'icon-arrow-right' %}</a>
+            {% endif %}
+          </div>
+
+          <div class="site-header__cart__overlay"></div>
+
+          <script>
+            $.fn.slideFadeToggle  = function(speed, easing, callback) {
+              return this.animate({opacity: 'toggle', height: 'toggle'}, speed, easing, callback);
+            };
+            $('.site-header__cart').click(function(e) {
+              e.preventDefault();
+              $('.shopping-cart').slideFadeToggle().next('.site-header__cart__overlay').toggle();
+              $('body').toggleClass('active-overlay');
+            });
+            $('.site-header__cart__overlay').click(function(e){
+              e.preventDefault();
+              $(this).toggle().prev('.shopping-cart').slideFadeToggle();
+              $('body').toggleClass('active-overlay');
+            });
+          </script>
+        {% endif %}
+
+      </div>
+    </div>
+    <div id="quickSearchResult"></div>
+  </header>
+
+  {% if settings.align_menu == 'below' %}
+    <nav class="nav-below hidden-sm-down text-{{ settings.align_menu_text }}" id="AccessibleNav" role="navigation">
+      {% include 'site-nav', nav_alignment: 'site-nav--centered' %}
+    </nav>
+  {% endif %}
+</div>
+<style>
+  {% if settings.logo != blank %}
+    .site-header__logo-image {
+      max-width: {{ settings.logo_max_width }}px;
+    }
+  {% endif %}
+
+  {% if settings.align_logo == 'left' %}
+    .site-header__logo-image {
+      margin: 0;
+    }
+  {% endif %}
+</style>

@@ -1,0 +1,183 @@
+
+{% paginate blog.articles by 9 %}
+<main class="main-content" id="MainContent" role="main">
+<div id="shopify-section-blog-template" class="shopify-section">
+<div class="blog--list-view">
+    <div class="border-top">
+      <div class="container-fluid" style="padding:0px;">
+          <div class="row" style="margin:0px;">
+            {% for article in blog.articles %}
+              <div class="article--listing presslisting listingsmall col-md-20" style="padding:0px 5px;">
+                <div>
+                  <a href="{{article.url}}" class="article__list-image" style="background-image:url({{ article.image.src | img_url: '800x' }}"></a>
+                <div class="col-md-30 offset-md-15 bloginfo">
+                    <h2 class="article__title h3"><a href="{{article.url}}">{{article.title}}</a></h2>
+                  {% if section.settings.blog_show_author %}
+                    <span class="article__author">by {{article.author}}</span>
+                    <br />
+                  {% endif %}
+                <ul class="list--inline article__meta-buttons">
+                  <li>
+                    <a href="{{article.url}}" class="blogrm">
+                      Read More
+                    </a>
+                  </li>
+                </ul>
+                </div>
+                </div>
+              </div>
+              {% endfor %}
+          </div>
+      </div>
+    </div>
+  {% if paginate.pages > 1 %}
+      {% include 'pagination' %}
+    {% endif %}
+</div>
+</div>
+</main>
+{% endpaginate %}
+<style type="text/css">
+  .article__list-image {
+    /*height: 70vh;
+}
+.listingsmall .article__list-image {
+    {% comment %} height: 45vh; {% endcomment %}*/
+}
+.bloginfo {
+    background-color: white;
+    position: absolute;
+    bottom: 0px;
+    right: 0px;
+    left: 0px;
+    text-align: center;
+    padding: 20px;
+}
+.article__title {
+    margin-bottom: 10px;
+}
+/* .list--inline {
+    padding: 0;
+    margin: 0;
+} */
+</style>
+{% schema %}
+  {
+    "name": "Blog pages",
+    "settings": [
+      {
+        "type": "select",
+        "id": "layout",
+        "label": "Layout",
+        "default": "list",
+        "options": [
+          {
+            "value": "grid",
+            "label": "Grid"
+          },
+          {
+            "value": "list",
+            "label": "List"
+          }
+        ]
+      },
+      {
+        "type": "checkbox",
+        "id": "blog_show_author",
+        "label": "Show author",
+        "default": true
+      },
+      {
+        "type": "checkbox",
+        "id": "blog_show_date",
+        "label": "Show date",
+        "default": true
+      },
+      {
+        "type": "checkbox",
+        "id": "enable_sidebar",
+        "label": "Enable sidebar?"
+      }
+    ],
+    "blocks": [
+      {
+        "type": "collection_sidebar",
+        "name": "Featured Collection",
+        "limit": 1,
+        "settings": [
+          {
+            "type": "text",
+            "id": "title",
+            "label": "Title"
+          },
+          {
+            "type": "collection",
+            "id": "collection",
+            "label": "Collection to use"
+          },
+          {
+            "type": "select",
+            "id": "collection_qty",
+            "options": [
+              { "value": "2", "label": "2" },
+              { "value": "3", "label": "3" },
+              { "value": "4", "label": "4" },
+              { "value": "5", "label": "5" },
+              { "value": "6", "label": "6" }
+            ],
+            "label": "Number of products to show"
+          }
+        ]
+      },
+      {
+        "type": "menu_sidebar",
+        "name": "Quick Links",
+        "settings": [
+          {
+            "type": "text",
+            "id": "title",
+            "label": "Title"
+          },
+          {
+            "type": "link_list",
+            "id": "quick_links",
+            "label": "Linklist to use"
+          }
+        ]
+      },
+      {
+        "type": "image_sidebar",
+        "name": "Advertisement",
+        "settings": [
+          {
+            "type": "text",
+            "id": "title",
+            "label": "Title"
+          },
+          {
+            "type": "image_picker",
+            "id": "image",
+            "label": "Ad image"
+          },
+          {
+            "type": "url",
+            "id": "link",
+            "label": "Ad link"
+          }
+        ]
+      },
+      {
+        "type": "blog_sidebar",
+        "name": "Most Recent Blog Post",
+        "settings": [
+          {
+            "type": "text",
+            "id": "title",
+            "label": "Title",
+            "default": "Latest Article"
+          }
+        ]
+      }
+    ]
+  }
+{% endschema %}

@@ -1,0 +1,228 @@
+{%- assign collection_image_size = '1200x' -%}
+{%- assign collection_explore_need = false -%}
+{% for block in section.blocks %}
+  {%- assign collection_handle = block.settings.collection -%}
+  {% if collections[collection_handle].id == collection.id %}
+    {%- assign collection_explore_need = true -%}
+    <div class="collection-explore sub-collection-explore">
+      <div class="container">
+        <div class="row" style="justify-content: center;">
+          {%- assign collection_blocks = '' -%}
+          {%- assign collection_count = 0 -%}
+          {% for i in (1..7) %}
+            {% capture block_collection_handle %}explore-collection-{{ i }}{% endcapture %}
+            {%- assign block_collection_handle = block.settings[block_collection_handle] -%}
+            {% if block_collection_handle != blank %}
+         	  {%- assign collection_count = collection_count | plus: 1 -%}
+              {% capture collection_blocks %}
+                {{ collection_blocks }}
+                {% capture block_image_override %}explore-collection_image-{{ i }}{% endcapture %}
+                {% capture block_image_override_hover %}explore-collection_imageh-{{ i }}{% endcapture %}
+                {% capture block_text_override %}explore-collection_title-{{ i }}{% endcapture %}
+                {% if block.settings[block_image_override] %}
+                  {% capture collection_image_url %}{{ block.settings[block_image_override] | img_url: collection_image_size }}{% endcapture %}
+                  {% capture collection_image_url_hover %}{{ block.settings[block_image_override_hover] | img_url: collection_image_size }}{% endcapture %}
+                {% endif %}
+                <div class="col-30 col-sm-30 col-md-8 collection-block-single">
+                  <a href="{{ block_collection_handle }}" class="explore-collection-image explore-collection-image-{{ forloop.index }}">
+                    <h3>{% if block.settings[block_text_override] != blank %}{{ block.settings[block_text_override] }}{% endif %}</h3>
+                  </a>
+                </div>
+                 <style>
+              .explore-collection-image-{{ forloop.index }}{
+                background-image:url('{{ collection_image_url }}');
+              }
+              .explore-collection-image-{{ forloop.index }}:hover{
+                background-image:url('{{ collection_image_url_hover }}');
+              }
+            </style>
+              {% endcapture %}
+            {% endif %}
+          {% endfor %}
+          {% comment %} <div class="col-60 col-sm-30 col-md-20 col-lg collection-block-single collectin-block-title">
+            <div class="row collection-article">
+              <div class="col-60 align-self-center">
+                <h2>{{ block.settings.heading }}</h2>
+              </div>
+            </div>
+          </div> {% endcomment %}
+          {{ collection_blocks }}
+        </div>
+      </div>
+    </div>
+    {% break %}
+  {% endif %}
+{% endfor %}
+{% unless collection_explore_need %}<style> #shopify-section-{{ section.id }} { display: none; } </style>{% endunless %}
+{% schema %}
+  {
+    "name": "Explore Child Collections",
+    "settings": [
+    ],
+    "blocks": [
+      {
+        "type": "featured_collection",
+        "name": "Collection",
+        "settings": [
+          {
+            "type": "text",
+            "id": "title",
+            "label": "Collection Name",
+            "info": "for organizational purposes only"
+          },
+          {
+            "type": "collection",
+            "id": "collection",
+            "label": "Collection Attached To"
+          },
+          {
+            "type": "text",
+            "id": "heading",
+            "label": "Heading",
+            "default": "Explore the entire line"
+          },
+          {
+            "type": "url",
+            "id": "explore-collection-1",
+            "label": "Block 1 - Collection Link"
+          },
+          {
+            "type": "image_picker",
+            "id": "explore-collection_image-1",
+            "label": "Block 1 - Collection Image Override"
+          },
+          {
+            "type": "image_picker",
+            "id": "explore-collection_imageh-1",
+            "label": "Block 1 - Collection Image Override Hover"
+          },
+          {
+            "type": "text",
+            "id": "explore-collection_title-1",
+            "label": "Block 1 - Collection Name Overide"
+          },
+          {
+            "type": "url",
+            "id": "explore-collection-2",
+            "label": "Block 2 - Collection Link"
+          },
+          {
+            "type": "image_picker",
+            "id": "explore-collection_image-2",
+            "label": "Block 2 - Collection Image Override"
+          },
+          {
+            "type": "image_picker",
+            "id": "explore-collection_imageh-2",
+            "label": "Block 2 - Collection Image Override"
+          },
+          {
+            "type": "text",
+            "id": "explore-collection_title-2",
+            "label": "Block 2 - Collection Name Overide"
+          },
+          {
+            "type": "url",
+            "id": "explore-collection-3",
+            "label": "Block 3 - Collection Link"
+          },
+          {
+            "type": "image_picker",
+            "id": "explore-collection_image-3",
+            "label": "Block 3 - Collection Image Override"
+          },
+          {
+            "type": "image_picker",
+            "id": "explore-collection_imageh-3",
+            "label": "Block 3 - Collection Image Override Hover"
+          },
+          {
+            "type": "text",
+            "id": "explore-collection_title-3",
+            "label": "Block 3 - Collection Name Overide"
+          },
+          {
+            "type": "url",
+            "id": "explore-collection-4",
+            "label": "Block 4 - Collection Link"
+          },
+          {
+            "type": "image_picker",
+            "id": "explore-collection_image-4",
+            "label": "Block 4 - Collection Image Override"
+          },
+          {
+            "type": "image_picker",
+            "id": "explore-collection_imageh-4",
+            "label": "Block 4 - Collection Image Override Hover"
+          },
+          {
+            "type": "text",
+            "id": "explore-collection_title-4",
+            "label": "Block 4 - Collection Name Overide"
+          },
+          {
+            "type": "url",
+            "id": "explore-collection-5",
+            "label": "Block 5 - Collection Link"
+          },
+          {
+            "type": "image_picker",
+            "id": "explore-collection_image-5",
+            "label": "Block 5 - Collection Image Override"
+          },
+          {
+            "type": "image_picker",
+            "id": "explore-collection_imageh-5",
+            "label": "Block 5 - Collection Image Override Hover"
+          },
+          {
+            "type": "text",
+            "id": "explore-collection_title-5",
+            "label": "Block 5 - Collection Name Overide"
+          },
+          {
+            "type": "url",
+            "id": "explore-collection-6",
+            "label": "Block 6 - Collection Link"
+          },
+          {
+            "type": "image_picker",
+            "id": "explore-collection_image-6",
+            "label": "Block 6 - Collection Image Override"
+          },
+                    {
+            "type": "image_picker",
+            "id": "explore-collection_imageh-6",
+            "label": "Block 6 - Collection Image Override Hover"
+          },
+          {
+            "type": "text",
+            "id": "explore-collection_title-6",
+            "label": "Block 6 - Collection Name Overide"
+          },
+          {
+            "type": "url",
+            "id": "explore-collection-7",
+            "label": "Block 7 - Collection Link"
+          },
+          {
+            "type": "image_picker",
+            "id": "explore-collection_image-7",
+            "label": "Block 7 - Collection Image Override"
+          },
+          {
+            "type": "image_picker",
+            "id": "explore-collection_imageh-7",
+            "label": "Block 7 - Collection Image Override Hover"
+          },
+          {
+            "type": "text",
+            "id": "explore-collection_title-7",
+            "label": "Block 7 - Collection Name Overide"
+          }
+        ]
+      }
+    ]
+  }
+{% endschema %}

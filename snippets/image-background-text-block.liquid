@@ -1,0 +1,55 @@
+
+{% style %}
+
+    #block-{{ block.id }} {
+        padding-top: {{ block.settings.ptop }}px;
+        padding-bottom: {{ block.settings.pbottom }}px;
+
+        {% if block.settings.background_color != blank %}
+            background-color: {{ block.settings.background_color }};
+        {% endif %}
+        {% if block.settings.background_image != blank %}
+            background-image: url({{ block.settings.background_image | img_url: 'master' }});
+            background-position: bottom;
+            background-repeat: no-repeat;
+        {% endif %}
+    }
+
+    @media (max-width: 768px) {
+        #block-{{ block.id }}  {
+          padding-top: {{ block.settings.ptop_mob }}px;
+          padding-bottom: {{ block.settings.pbottom_mob }}px;
+        }
+    }
+
+    {% if block.settings.text_color != blank %}
+    #block-{{ block.id }} .pretitle, 
+    #block-{{ block.id }} .mega-title,
+    #block-{{ block.id }} .description {
+        color: {{ block.settings.text_color }};
+    }
+    {% endif %}
+{% endstyle %}
+
+<div id="block-{{ block.id }}" class="image-background-text-wrapper index-block">
+    <div class="container">
+            <div class="contents text-{{ block.settings.alignment }}">
+            {% if block.settings.pretitle != blank %}
+                <p class="subtitle-item pretitle">{{ block.settings.pretitle }}</p>
+            {% endif %}
+
+            {% if block.settings.icon != blank %}
+                <img class="image-icon" src="{{ block.settings.icon | img_url: '150x' }}" alt="" />
+            {% endif %}
+
+            {% if block.settings.title != blank %}
+                <h2 class="h1 mega-title">{{ block.settings.title }}</h2>
+            {% endif %}
+
+            {% if block.settings.contents != blank %}
+                <p class="subtitle-item description">{{ block.settings.contents }}</p>
+            {% endif %}
+
+            </div>
+    </div>
+</div>

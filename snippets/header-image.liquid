@@ -1,0 +1,76 @@
+{% if section.settings.title != blank %}
+  {%- assign header_title = section.settings.title -%}
+{% elsif template contains 'article' %}
+  {%- assign header_title = article.title -%}
+{% elsif template contains 'page' %}
+  {%- assign start_title = page.content | slice: 0, 3 -%}
+  {% if start_title contains 'h1' %}
+    {%- assign first_h1 = page.content | split: '</h1>' %}
+    {%- assign first_h1 = first_h1[0] | split: '<h1>' %}
+    {%- assign header_title = first_h1[1] -%}
+  {% else %}
+    {%- assign header_title = page.title -%}
+  {% endif %}
+{% endif %}
+
+{%- assign header_img = false -%}
+{% if template contains 'page' %}
+  {%- assign curr_image = '' -%}
+  {% if template contains 'page' %}
+    {% for block in section.blocks %}
+      {% if page.handle == block.settings.page and block.settings.image != blank %}
+        {%- assign header_img = true -%}
+        {%- assign header_image_std = block.settings.image | img_url: '2400x' -%}
+        {%- assign header_image_desktop = block.settings.image | img_url: '1500x' -%}
+        {%- assign header_image_tablet = block.settings.image | img_url: '1000x' -%}
+        {%- assign header_image_mobile = block.settings.image | img_url: '600x' -%}
+        {% break %}
+      {% endif %}
+    {% endfor %}
+  {% else %}
+    {% if section.settings.image != blank %}
+      {%- assign header_img = true -%}
+      {%- assign header_image_desktop = section.settings.image | img_url: '1500x' -%}
+      {%- assign header_image_tablet = section.settings.image | img_url: '1000x' -%}
+      {%- assign header_image_mobile = section.settings.image | img_url: '600x' -%}
+    {% endif %}
+  {% endif %}
+{% elsif section.settings.image != blank %}
+  {%- assign header_img = true -%}
+  {%- assign header_image_std = section.settings.image | img_url: '2400x' -%}
+  {%- assign header_image_desktop = section.settings.image | img_url: '1500x' -%}
+  {%- assign header_image_tablet = section.settings.image | img_url: '1000x' -%}
+  {%- assign header_image_mobile = section.settings.image | img_url: '600x' -%}
+{% elsif article.image %}
+  {%- assign header_image_std = article.image.src | img_url: '2400x' -%}
+  {%- assign header_image_desktop = article.image.src | img_url: '1500x' -%}
+  {%- assign header_image_tablet = article.image.src | img_url: '1000x' -%}
+  {%- assign header_image_mobile = article.image.src | img_url: '600x' -%}
+{% endif %}
+
+{% if header_img %}
+<div class="header-image top-header-image">
+  
+</div>
+
+  <style>
+    .header-image {
+      background-image: url('{{ header_image_std }}');
+    }
+    @media screen and (max-width: 1024px) {
+      .header-image {
+        background-image: url('{{ header_image_desktop }}');
+      }
+    }
+    @media screen and (max-width: 768px) {
+      .header-image {
+        background-image: url('{{ header_image_tablet }}');
+      }
+    }
+    @media screen and (max-width: 425px) {
+      .header-image {
+        background-image: url('{{ header_image_mobile }}');
+      }
+    }
+  </style>
+{% endif %}

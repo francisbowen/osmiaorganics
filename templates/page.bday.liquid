@@ -1,0 +1,96 @@
+<div class="container">
+  <div class="row">
+    <article class="col-md-30 offset-md-15 space-item">
+      <div class="section-header">
+        <h1>Tell us your birthday</h1>
+      </div>
+      <div class="rte">
+        {% if customer %}
+          {%- assign bday_collected = false -%}
+          {% for tag in customer.tags %}
+            {% if tag contains 'DOB: ' %}
+              {%- assign bday_collected = true -%}
+              {% break %}
+            {% endif %}
+          {% endfor %}
+          {% if bday_collected %}
+            <p id="hb_intro">Thank you for letting us know your birthday!</p>
+          {% else %}
+            <p id="hb_intro">An exclusive discount and special offers could be heading your way.</p>
+
+            <div id="hb_success" style="display: none; color: green;">Thank you for letting us know</div>
+            <form id="integro">
+
+              <div style="margin-bottom: 10px;" id="hb_first_name_wrapper">
+                <label for="hb_first_name">First name</label>
+                <input type="text" name="hb_first_name" id="hb_first_name" class="input-group-field hb-input-field" value="{% if customer %}{{ customer.first_name }}{% endif %}">
+              </div>
+              <div style="margin-bottom: 10px;" id="hb_last_name_wrapper">
+                <label for="hb_last_name">Last name</label>
+                <input type="text" name="hb_last_name" id="hb_last_name" class="input-group-field hb-input-field" value="{% if customer %}{{ customer.last_name }}{% endif %}">
+              </div>
+
+              <div style="margin-bottom: 10px;" id="hb_email_address_wrapper">
+                <label for="hb_email_address">Email address</label>
+                <input type="email" name="hb_email_address" id="hb_email_address" class="input-group-field hb-input-field" value="{% if customer %}{{ customer.email }}{% endif %}">
+              </div>
+
+              <div style="margin-bottom: 20px;">
+                <div style="width: 100px; float: left; margin-right: 5px;" id="bd_mm_wrapper">
+                  <label for="bd_mm">Month</label>
+                  <input type="text" name="bd_mm" id="bd_mm" class="input-group-field hb-input-field" placeholder="mm">
+                </div>
+                <div style="width: 100px; float: left; margin-right: 5px;" id="bd_dd_wrapper">
+                  <label for="bd_dd">Day</label>
+                  <input type="text" name="bd_dd" id="bd_dd" class="input-group-field hb-input-field" placeholder="dd">
+                </div>
+                <div style="width: 200px; float: left; margin-right: 5px;" id="bd_yyyy_wrapper">
+                  <label for="bd_yyyy">Year</label>
+                  <input type="text" name="bd_yyyy" id="bd_yyyy" class="input-group-field hb-input-field" placeholder="yyyy">
+                </div>
+                <div style="clear: both;"></div>
+              </div>
+
+              <input type="hidden" name="bd_user" value="{{ customer.id }}" />
+
+              <button class="btn" id="bday_submit_button" disabled="disabled">Submit</button>
+              
+              <small>By submitting your birthday, you are agreeing to receive marketing emails from Osmia</small>
+
+            </form>
+            <script>
+              $(document).on('change','form#integro input:visible',function(){ 
+                var empty = $('form#integro').find('input:visible').filter(function() {
+                  return this.value === '';
+                });
+                console.log(empty);
+                if(!empty.length) {
+                  $('#bday_submit_button').prop('disabled',false);
+                }
+              });
+              $('form#integro').on('submit',function(e){
+                e.preventDefault();
+                var integro_url = '//hook.integromat.com/54rk3vju6ghszhxg5mt5qnfmw9uudv6i';
+                $.ajax({
+                  type: "POST",
+                  url: integro_url,
+                  data: $(this).serialize(),
+                  success: function(data) {
+                    console.log(data);
+                    $('#hb_success').show();
+                    $('#integro').hide();
+                  },
+                  fail: function(jqXHR, textStatus) {
+                    console.log(jqXHR + ' -- ' +textStatus);
+                  }
+                });
+              });
+            </script>
+          {% endif %}
+        {% else %}
+          <p id="hb_intro">You must be logged in to sign up. <a href="/account/login">Login Now</a></p>
+        {% endif %}
+      </div>
+    </article>
+  </div>
+</div>

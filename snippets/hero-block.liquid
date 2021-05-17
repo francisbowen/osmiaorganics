@@ -1,0 +1,142 @@
+<div class="hero-section-container">
+    {% style %}
+        {% unless block.settings.image == blank and block.settings.parallax_me %}
+        .hero--{{ block.id }} {
+            background-position: {{ block.settings.alignment }};
+        }
+      
+        @media screen and (max-width: 150px) {
+            .hero--{{ block.id }} {
+                {% if block.settings.mobileimage != blank %}
+                background-image: url('{{ block.settings.mobileimage | img_url: '150x' }}');
+                {% else %}  
+                background-image: url('{{ block.settings.image | img_url: '150x' }}');
+                {% endif %}
+            }
+        }
+      
+        @media screen and (min-width: 151px) and (max-width: 300px) {
+            .hero--{{ block.id }} {
+                {% if block.settings.mobileimage != blank %}
+                background-image: url('{{ block.settings.mobileimage | img_url: '300x' }}');
+                {% else %}  
+                background-image: url('{{ block.settings.image | img_url: '300x' }}');
+                {% endif %}
+            }
+        }
+      
+        @media screen and (min-width: 301px) and (max-width: 600px) {
+            .hero--{{ block.id }} {
+                {% if block.settings.mobileimage != blank %}
+                background-image: url('{{ block.settings.mobileimage | img_url: '600x' }}');
+                {% else %}  
+                background-image: url('{{ block.settings.image | img_url: '600x' }}');
+                {% endif %}
+            }
+        }
+
+        @media screen and (min-width: 601px)  and (max-width: 767px) {
+            .hero--{{ block.id }} {
+                {% if block.settings.mobileimage != blank %}
+                background-image: url('{{ block.settings.mobileimage | img_url: '900x' }}');
+                {% else %}  
+                background-image: url('{{ block.settings.image | img_url: '900x' }}');
+                {% endif %}
+            }
+        }
+
+        @media screen and (min-width: 768px) and (max-width: 1000px) {
+            .hero--{{ block.id }} {
+                background-image: url('{{ block.settings.image | img_url: '1000x1000' }}');
+            }
+        }
+      
+        @media screen and (min-width: 1001px) {
+            .hero--{{ block.id }} {
+                background-image: url('{{ block.settings.image | img_url: '2000x2000' }}');
+            }
+        }
+        {% endunless %}
+      
+        {% if block.settings.title_color %}
+        .hero--{{ block.id }} .hero__inner h2.mega-title {
+            color: {{ block.settings.title_color }};
+        }
+        {% endif %}
+      
+        {% if block.settings.text_color %}
+        .hero--{{ block.id }} .hero__inner .mega-subtitle {
+            color: {{ block.settings.text_color }};
+        }
+        {% endif %}
+
+        @media screen and (max-width: 767px){
+            .hero__inner--{{ block.id }} {
+                padding: {{block.settings.padding}}px 0;
+            }
+        }
+        {% unless block.settings.overlay %}
+        .animsition.finished .hero--{{ block.id }} .hero__overlay::before {
+            display: none;
+        }
+        {% endunless %}
+    {% endstyle %}
+    
+  <div class="{{ block.settings.contained }}">
+     <div class="hero hero--{{ block.id }} hero--{{ block.settings.hero_size }}{% if block.settings.title != blank or block.settings.text != blank or block.settings.button_label != blank %} {% endif %} hidden-sm-down">
+        {% if block.settings.image == blank %}
+        <div class="placeholder-background">
+           {{ 'lifestyle-1' | placeholder_svg_tag: 'placeholder-svg' }}
+        </div>
+        {% endif %}
+        {% if block.settings.image != blank and block.settings.parallax_me %}
+        <img class="parallaxer" src="{{ block.settings.image | img_url: '1000x1000' }}" data-parallax='{"y" : {{ block.settings.parallax_sensitivity }}}' />
+        {% endif %}
+        <div class="hero__inner row image-with-text-full">
+           <div class="container">
+              <div class="col-md-30 image-with-text-item{% if block.settings.text_layout == 'center' %} offset-md-15{% elsif block.settings.text_layout == 'right' %} offset-md-30{% endif %} text-{{ block.settings.text_align }}">
+                 {% if block.settings.title != blank %}
+                 <h2 class="h1 mega-title{% if block.settings.text_size == 'large' %} mega-title--large{% endif %}">{{ block.settings.title | escape }}</h2>
+                 {% endif %}
+                 {% if block.settings.text != blank %}
+                 <div class="rte-setting mega-subtitle{% if block.settings.text_size == 'large' %} mega-subtitle--large{% endif %}">{{ block.settings.text }}</div>
+                 {% endif %}
+                 {% if block.settings.button_label != blank and block.settings.button_link != blank %}
+                 <a href="{{ block.settings.button_link }}" class="btn hero__btn ">
+                 {{ block.settings.button_label }}
+                 </a>
+                 {% endif %}
+              </div>
+           </div>
+        </div>
+     </div>
+     <div class="hidden-md-up">
+        {% if block.settings.image == blank %}
+        <div class="placeholder-background">
+           {{ 'lifestyle-1' | placeholder_svg_tag: 'placeholder-svg' }}
+        </div>
+        {% endif %}
+        {% if block.settings.image != blank and block.settings.parallax_me %}
+        <img class="parallaxer" src="{{ block.settings.image | img_url: '1000x1000' }}" data-parallax='{"y" : {{ block.settings.parallax_sensitivity }}}' />
+        {% endif %}
+        <div class="hero hero--{{ block.id }} hero--{{ block.settings.hero_size }}"></div>
+        <div class="hero__inner hero__inner--{{ block.id }} row image-with-text-full">
+           <div class="container image-with-text-item{% if block.settings.text_layout == 'center' %} offset-md-15{% elsif block.settings.text_layout == 'right' %} offset-md-30{% endif %} text-{{ block.settings.text_align }}">
+              <div class="col-md-30">
+                 {% if block.settings.title != blank %}
+                 <h2 class="h1 mega-title{% if block.settings.text_size == 'large' %} mega-title--large{% endif %}">{{ block.settings.title | escape }}</h2>
+                 {% endif %}
+                 {% if block.settings.text != blank %}
+                 <div class="rte-setting mega-subtitle{% if block.settings.text_size == 'large' %} mega-subtitle--large{% endif %}">{{ block.settings.text }}</div>
+                 {% endif %}
+                 {% if block.settings.button_label != blank and block.settings.button_link != blank %}
+                 <a href="{{ block.settings.button_link }}" class="btn btn--secondary btn--small blog-btn-small">
+                 {{ block.settings.button_label }}
+                 </a>
+                 {% endif %}
+              </div>
+           </div>
+        </div>
+     </div>
+    </div>
+</div>

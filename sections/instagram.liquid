@@ -1,0 +1,86 @@
+
+<div class="{{ section.settings.contained }} instagram-fourty-sixty instagram--fourty-sixty--{{ section.id }}">
+  <div class="row">
+    <div class="col-lg-60"> 
+      <div class="text-center">
+        <h2><a href="https://www.instagram.com/OSMIAORGANICS" target="_blank">{{section.settings.title}}</a></h2>
+        {% if section.settings.sub_title_link != blank %}
+            <p><a href="{{ section.settings.sub_title_link }}" target="_blank">{{section.settings.sub_title}}</a></p>
+          {% else %}
+            <p>{{section.settings.sub_title}}</p>
+        {% endif %}
+      </div>
+      <script src="//foursixty.com/media/scripts/fs.embed.v2.5.js" data-feed-id="osmia" data-theme="sizes_v2_5" data-page-size="7"></script><style>.fs-has-links {display:none;}.fs-wrapper div.fs-text-container .fs-entry-title, div.fs-detail-title{font-family:Superclarendon Lt, serif;font-style:italic;font-weight:normal;}div.fs-text-container .fs-entry-date, div.fs-detail-container .fs-post-info, div.fs-wrapper div.fs-has-links::after, .fs-text-product, .fs-overlink-text{font-family:Helvetica Neue, Helvetica, Arial, sans-serif;font-style:normal;font-weight:bold;}.fs-slider-next-button, .fs-slider-prev-button { opacity: 1; }.fs-wrapper div.fs-text-container * {color:#fff}.fs-wrapper div.fs-text-container {background-color:rgba(67, 61, 61, 0.69); margin: 37px}div.fs-entry-date{display:none}.fs-wrapper div.fs-timeline-entry{ margin: 13px }</style>
+    </div>
+  </div>
+</div>
+<style>
+  {% if section.settings.title_color %}
+    .instagram--fourty-sixty--{{ section.id }} h2 {
+      color: {{ section.settings.title_color }};
+    }
+  {% endif %}
+  {% if section.settings.sub_title_color %}
+    .instagram--fourty-sixty--{{ section.id }} p {
+      color: {{ section.settings.sub_title_color }};
+    }
+  {% endif %}
+  @media screen and (min-width: 768px){
+	.instagram-section {
+    padding-bottom: 0px;
+}
+  }
+</style>
+{% schema %}
+  {
+    "name": "Instagram",
+    "class": "index-section instagram-section",
+    "settings": [
+      {
+        "type": "radio",
+        "id": "contained",
+        "label": "Image should:",
+        "options": [
+          { "value": "container", "label": "Contstrain to container" },
+          { "value": "container-fluid no-padding", "label": "Flow to the width of screen" }
+        ],
+        "default": "container"
+      },
+      {
+        "type": "text",
+        "id": "title",
+        "label": "Heading",
+        "default": "We make it. You wear it well."
+      },
+      {
+        "type": "color",
+        "id": "title_color",
+        "label": "Heading color",
+        "default":"#3e3e3e"
+      },
+      {
+        "type": "text",
+        "id": "sub_title",
+        "label": "Sub Heading",
+        "default": "Join the crew #mklivin"
+      },
+      {
+        "type": "url",
+        "id": "sub_title_link",
+        "label": "Sub Heading Link"
+      },
+      {
+        "type": "color",
+        "id": "sub_title_color",
+        "label": "Sub heading color",
+        "default":"#3e3e3e"
+      }
+    ],
+    "presets": [
+      {
+        "name": "Instagram",
+        "category": "Text"
+      }
+    ]
+  }
+{% endschema %}

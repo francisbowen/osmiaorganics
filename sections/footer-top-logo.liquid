@@ -1,0 +1,50 @@
+<div id="section-cta">
+<div class="container">
+<div class="row">
+  {% for block in section.blocks %}  
+  <div class=" col-md-12 mobile-nav-bottom"> 
+    <ul class="about-nav-bottom" id="about_nav">
+    <li>
+      <a href="{{ block.settings.link }}" class="btn-bottom-item {{ block.settings.linktext | remove: " " }}">{{ block.settings.linktext }}</a></li>
+    </ul>
+  </div> 
+  
+  {% endfor %}
+</div>
+  </div>
+</div>  
+{% schema %}
+{
+  "name": "CTA Blocks",
+	"max_blocks": 5,
+  "settings": [
+    {
+      "id": "text-box",
+      "type": "text",
+      "label": "Heading",
+      "default": "Title"
+    }
+  ],
+  "blocks": [
+    {
+      "type": "select",
+      "name": "Add Button",
+      "settings": [
+        {
+          "id": "link",
+          "type": "url",
+       		"label": "Button link"
+        },
+        {
+          "id": "linktext",
+          "type": "text",
+          "label": "Button text",
+          "default": "Click here"
+        }
+      ]
+    
+  
+    }
+  ]
+}
+{% endschema %}

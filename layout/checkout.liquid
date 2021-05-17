@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="{{ locale }}" dir="{{ direction }}" class="{{ checkout_html_classes }}">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, height=device-height, minimum-scale=1.0, user-scalable=0">
+    <meta name="referrer" content="origin">
+
+    <title>{{ page_title }}</title>
+
+    {{ content_for_header }}
+
+    {{ checkout_stylesheets }}
+    {{ checkout_scripts }}
+    <style>
+      .custom-checkout-alert{
+        margin-top:30px;
+        color: #0c5460;
+        background-color: #d1ecf1;
+        border-color: #bee5eb;
+        padding:15px;
+        font-style:italic;
+        font-size:12px;
+        border-radius:5px;
+        margin-bottom:30px;
+      }
+      .custom-checkout-alert strong{
+       font-weight:700;
+       font-style:normal;
+      }
+      .btn:hover, .sp-modal-toggle:hover {
+        background-color: rgba(84,88,90,0.65);
+      }
+      .js .sidebar .btn--disabled {
+        background: #545859;
+      }
+    </style>
+    <!-- Google Tag Manager -->
+    <script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+    new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+    j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+    'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
+    })(window,document,'script','dataLayer','GTM-TJSMBB5');</script>
+    <!-- End Google Tag Manager -->
+  </head>
+  <body>
+    {{ skip_to_content_link }}
+
+    <div class="banner" data-header>
+      <div class="wrap">
+        {{ content_for_logo }}
+      </div>
+    </div>
+
+    {{ order_summary_toggle }}
+
+    <div class="content" data-content>
+      <div class="wrap">
+        <div class="main" role="main">
+          <div class="main__header">
+            {{ content_for_logo }}
+            {{ breadcrumb }}
+            {{ alternative_payment_methods }}
+          </div>
+          <div class="main__content">
+            {{ content_for_layout }}
+            {% unless checkout.shipping_address.country_code == "US" %}
+          {% section 'international-alert' %}
+          {% endunless %}
+          </div>
+          <div class="main__footer">
+            {{ content_for_footer }}
+          </div>
+        </div>
+        <div class="sidebar" role="complementary">
+          <div class="sidebar__header">
+            {{ content_for_logo }}
+          </div>
+          <div class="sidebar__content">
+            {{ content_for_order_summary }}
+          </div>
+        </div>
+      </div>
+    </div>
+    {{ tracking_code }}
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script>
+    jQuery(document).ready(function(){
+      jQuery('.order-summary-toggle').trigger('click');
+      /*jQuery('.section--shipping-method .content-box__row:nth-child(2)').insertAfter(jQuery('.section--shipping-method .content-box__row:last-child'));
+      jQuery('.section--shipping-method .content-box__row:nth-child(3) label').trigger('click');
+      jQuery('.custom-checkout-alert').insertAfter('.section--shipping-method .section__header');
+      */
+      if (Shopify.Checkout.step == 'shipping_method'){
+        jQuery('.section--shipping-method .section__header').append('<p style="margin-top:10px;">Our processing speeds are slower than usual due to the pandemic. Once we’ve packed up your order, please see below for additional transit times provided by our carriers. If you need your Osmia in a hurry, please choose express shipping! Thanks in advance for your patience, and for supporting Osmia!</p>');
+        }
+    //Shipping Re-order
+    $('.section--shipping-method').find('#checkout_shipping_rate_id_shopify-usa20standard20shipping20an20estimated204-1220business20days-8_00').closest('.content-box__row').prependTo($('.section--shipping-method').find('fieldset.content-box'));
+      $('#checkout_shipping_rate_id_shopify-usa20standard20shipping20an20estimated204-1220business20days-8_00').trigger('click').closest('.radio__input').next().trigger('click');
+      $('.section--shipping-method').find('#checkout_shipping_rate_id_shopify-local20pickup20-20your20order20will20be20available20to20pickup20tuesday20-20friday2011am20-203pm_20we20will20contact20you20to20coordinate20a20time_-0_00').closest('.content-box__row').appendTo($('.section--shipping-method').find('fieldset.content-box'));
+    setTimeout(function(){
+      $('.section--shipping-method').find('#checkout_shipping_rate_id_shopify-usa20standard20shipping20an20estimated204-1220business20days-8_00').closest('.content-box__row').prependTo($('.section--shipping-method').find('fieldset.content-box'));
+      $('#checkout_shipping_rate_id_shopify-usa20standard20shipping20an20estimated204-1220business20days-8_00').trigger('click').closest('.radio__input').next().trigger('click');
+      $('.section--shipping-method').find('#checkout_shipping_rate_id_shopify-local20pickup20-20your20order20will20be20available20to20pickup20tuesday20-20friday2011am20-203pm_20we20will20contact20you20to20coordinate20a20time_-0_00').closest('.content-box__row').appendTo($('.section--shipping-method').find('fieldset.content-box'));
+    },5000)
+    });
+  </script>
+    <!-- Google Tag Manager (noscript) -->
+    <noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-TJSMBB5"
+    height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
+    <!-- End Google Tag Manager (noscript) -->
+  </body>
+</html>

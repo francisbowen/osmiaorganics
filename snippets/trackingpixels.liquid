@@ -1,0 +1,16 @@
+
+<!-- Start FastG8 Pixel Tag -->
+  <script type="text/javascript">
+    (function() {
+      var elem = document.createElement('script');
+      elem.src = (document.location.protocol == "https:" ? "https://" : "http://") + "u.fg8dgt.com/pixel?type=js&id=82&custom02={% if template contains 'product' %}product&sku={{ product.selected_or_first_available_variant.sku }}{% elsif template contains 'collection' %}category&cat={{ collection.title | url_param_escape }}{% else %}homepage{% endif %}&cb=" + Math.floor(Math.random() * 100000000) + "{% if customer %}&cust={{ customer.email | remove: ' ' | strip_newlines | downcase | md5 }}{% endif %}";
+      elem.async = true;
+      elem.type = "text/javascript";
+      var scpt = document.getElementsByTagName('script')[0];
+      scpt.parentNode.insertBefore(elem, scpt);
+    })();
+  </script>
+  <noscript>
+    <img src="//u.fg8dgt.com/pixel?type=img&id=82&custom02={% if template contains 'product' %}product&sku={{ product.selected_or_first_available_variant.sku }}{% elsif template contains 'collection' %}category&cat={{ collection.title | url_param_escape }}{% else %}homepage{% endif %}&cb={{ "now" | date: "%s" }}{% if customer %}&cust={{ customer.email | remove: ' ' | strip_newlines | downcase | md5 }}{% endif %}" style="display: none;" border="0" height="1" width="1"/>
+  </noscript>
+<!-- End FastG8 Pixel Tag -->
